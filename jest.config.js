@@ -17,7 +17,7 @@ module.exports = {
       useESM: false,
     }],
   },
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
 };
