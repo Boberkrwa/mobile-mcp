@@ -21,49 +21,49 @@ export interface TestUser {
 }
 
 export const testUsers: TestUser[] = [
-    {
-        id: 'Michael_Registration_Test',  // ← THIS BECOMES PART OF TEST TITLE
-        registrationData: {
-            name: 'מיכאל קורולנקו',
-            fetusCount: 1,
-            dateOptions: {
-                useRandomDate: true,
-                dateRange: {
-                    minDaysAgo: 14,
-                    maxDaysAgo: 104
-                }
-            }
-        },
-        expectedResults: {
-            shouldReachDashboard: true,
-            expectedScreens: ['splash', 'skip', 'name', 'date', 'fetus', 'dashboard']
-        }
-    },
-    {
-        id: 'Sarah_Twin_Pregnancy_Test',  // ← THIS BECOMES PART OF TEST TITLE
-        registrationData: {
-            name: 'שרה כהן',
-            fetusCount: 2,
-            dateOptions: {
-                useRandomDate: true,
-                dateRange: {
-                    minDaysAgo: 20,
-                    maxDaysAgo: 60
-                }
-            }
-        },
-        expectedResults: {
-            shouldReachDashboard: true,
-            expectedScreens: ['splash', 'skip', 'name', 'date', 'fetus', 'dashboard']
-        }
-    }
+	{
+		id: "Michael_Registration_Test",  // ← THIS BECOMES PART OF TEST TITLE
+		registrationData: {
+			name: "מיכאל קורולנקו",
+			fetusCount: 1,
+			dateOptions: {
+				useRandomDate: true,
+				dateRange: {
+					minDaysAgo: 14,
+					maxDaysAgo: 104
+				}
+			}
+		},
+		expectedResults: {
+			shouldReachDashboard: true,
+			expectedScreens: ["splash", "skip", "name", "date", "fetus", "dashboard"]
+		}
+	},
+	{
+		id: "Sarah_Twin_Pregnancy_Test",  // ← THIS BECOMES PART OF TEST TITLE
+		registrationData: {
+			name: "שרה כהן",
+			fetusCount: 2,
+			dateOptions: {
+				useRandomDate: true,
+				dateRange: {
+					minDaysAgo: 20,
+					maxDaysAgo: 60
+				}
+			}
+		},
+		expectedResults: {
+			shouldReachDashboard: true,
+			expectedScreens: ["splash", "skip", "name", "date", "fetus", "dashboard"]
+		}
+	}
 ];
 
 export const appConstants = {
-    splashScreenMaxAttempts: 10,
-    skipButtonMaxAttempts: 5,
-    defaultPauseTime: 2000,
-    longPauseTime: 3000,
-    androidBackButton: 4,
-    hebrewLocale: 'he-IL'
+	splashScreenMaxAttempts: 10,
+	skipButtonMaxAttempts: 5,
+	defaultPauseTime: 2000,
+	longPauseTime: 3000,
+	androidBackButton: 4,
+	hebrewLocale: "he-IL"
 };

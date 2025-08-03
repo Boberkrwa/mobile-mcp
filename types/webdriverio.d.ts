@@ -1,12 +1,12 @@
-declare module 'webdriverio' {
+declare module "webdriverio" {
     interface Capabilities {
         platformName?: string;
-        'appium:deviceName'?: string;
-        'appium:app'?: string;
-        'appium:appPackage'?: string;
-        'appium:appActivity'?: string;
-        'appium:automationName'?: string;
-        'appium:noReset'?: boolean;
+        "appium:deviceName"?: string;
+        "appium:app"?: string;
+        "appium:appPackage"?: string;
+        "appium:appActivity"?: string;
+        "appium:automationName"?: string;
+        "appium:noReset"?: boolean;
     }
 
     export interface RemoteOptions {

@@ -20,7 +20,7 @@ export const getAgentVersion = (): string => {
 
 const getLatestAgentVersion = async (): Promise<string> => {
 	const response = await fetch("https://api.github.com/repos/mobile-next/mobile-mcp/tags?per_page=1");
-	const json = await response.json();
+	const json = await response.json() as Array<{name: string}>;
 	return json[0].name;
 };
 

@@ -1,5 +1,36 @@
 import { ActionableError, SwipeDirection, ScreenSize, ScreenElement, Orientation } from "./robot";
 
+// WebDriver response type definitions
+interface WebDriverStatusResponse {
+	value?: {
+		ready?: boolean;
+	};
+}
+
+interface WebDriverSessionResponse {
+	value?: {
+		sessionId?: string;
+	};
+}
+
+interface WebDriverScreenResponse {
+	value?: {
+		screenSize?: {
+			width: number;
+			height: number;
+		};
+		scale?: number;
+	};
+}
+
+interface WebDriverScreenshotResponse {
+	value?: string;
+}
+
+interface WebDriverOrientationResponse {
+	value?: string;
+}
+
 export interface SourceTreeElementRect {
 	x: number;
 	y: number;
@@ -31,7 +62,7 @@ export class WebDriverAgent {
 		const url = `http://${this.host}:${this.port}/status`;
 		try {
 			const response = await fetch(url);
-			const json = await response.json();
+			const json = await response.json() as WebDriverStatusResponse;
 			return response.status === 200 && json.value?.ready === true;
 		} catch (error) {
 			// console.error(`Failed to connect to WebDriverAgent: ${error}`);
@@ -54,7 +85,7 @@ export class WebDriverAgent {
 			throw new ActionableError(`Failed to create WebDriver session: ${response.status} ${errorText}`);
 		}
 
-		const json = await response.json();
+		const json = await response.json() as WebDriverSessionResponse;
 		if (!json.value || !json.value.sessionId) {
 			throw new ActionableError(`Invalid session response: ${JSON.stringify(json)}`);
 		}
@@ -80,21 +111,21 @@ export class WebDriverAgent {
 		if (sessionUrl) {
 			const url = `${sessionUrl}/wda/screen`;
 			const response = await fetch(url);
-			const json = await response.json();
+			const json = await response.json() as WebDriverScreenResponse;
 			return {
-				width: json.value.screenSize.width,
-				height: json.value.screenSize.height,
-				scale: json.value.scale || 1,
+				width: json.value?.screenSize?.width || 0,
+				height: json.value?.screenSize?.height || 0,
+				scale: json.value?.scale || 1,
 			};
 		} else {
 			return this.withinSession(async sessionUrlInner => {
 				const url = `${sessionUrlInner}/wda/screen`;
 				const response = await fetch(url);
-				const json = await response.json();
+				const json = await response.json() as WebDriverScreenResponse;
 				return {
-					width: json.value.screenSize.width,
-					height: json.value.screenSize.height,
-					scale: json.value.scale || 1,
+					width: json.value?.screenSize?.width || 0,
+					height: json.value?.screenSize?.height || 0,
+					scale: json.value?.scale || 1,
 				};
 			});
 		}
@@ -235,8 +266,8 @@ export class WebDriverAgent {
 	public async getScreenshot(): Promise<Buffer> {
 		const url = `http://${this.host}:${this.port}/screenshot`;
 		const response = await fetch(url);
-		const json = await response.json();
-		return Buffer.from(json.value, "base64");
+		const json = await response.json() as WebDriverScreenshotResponse;
+		return Buffer.from(json.value || "", "base64");
 	}
 
 	public async swipe(direction: SwipeDirection): Promise<void> {
@@ -387,8 +418,8 @@ export class WebDriverAgent {
 		return this.withinSession(async sessionUrl => {
 			const url = `${sessionUrl}/orientation`;
 			const response = await fetch(url);
-			const json = await response.json();
-			return json.value.toLowerCase() as Orientation;
+			const json = await response.json() as WebDriverOrientationResponse;
+			return (json.value || "portrait").toLowerCase() as Orientation;
 		});
 	}
 }
