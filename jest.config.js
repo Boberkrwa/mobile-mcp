@@ -6,18 +6,21 @@ module.exports = {
   extensionsToTreatAsEsm: ['.ts'],
   globals: {
     'ts-jest': {
-      useESM: false,
+      useESM: true,
       tsconfig: {
-        module: 'CommonJS'
+        module: 'ES2022'
       }
     }
   },
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
-      useESM: false,
+      useESM: true,
     }],
   },
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(webdriverio|@wdio)/)'
+  ],
 };

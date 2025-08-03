@@ -32,10 +32,9 @@ export class DriverManager {
 				}
 			});
 
-			// Set timeouts
+			// Set timeouts (only implicit for mobile)
 			await this.driver.setTimeout({
-				"implicit": this.config.timeouts.implicit,
-				"pageLoad": this.config.timeouts.pageLoad
+				"implicit": this.config.timeouts.implicit
 			});
 
 			this.logger.info("WebDriver initialized successfully");

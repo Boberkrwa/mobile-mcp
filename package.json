@@ -13,7 +13,10 @@
   "scripts": {
     "build": "tsc && chmod +x lib/index.js",
     "lint": "eslint .",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/driver-manager.test.ts",
+    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/maccabi-app-integration.test.ts",
+    "test:journey": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/maccabi-complete-journey.test.ts",
     "test:manual": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testNamePattern='MANUAL'",
     "test:main": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testNamePattern='should open Maccabi app'",
     "watch": "tsc --watch",
