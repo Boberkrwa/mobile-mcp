@@ -4,18 +4,16 @@ import { maccabiConfig } from "../test/config/app.config";
 import { Logger } from "../test/utils/logger";
 
 /**
- * Unit Tests for DriverManager Class
- * 
- * Tests the core functionality of the DriverManager without
- * requiring a full app integration.
+ * DriverManager Unit Tests
+ * Tests core DriverManager functionality without app integration.
  */
-describe("🔧 DriverManager Unit Tests", () => {
+describe("DriverManager Unit Tests", () => {
 	let driverManager: DriverManager;
 	let logger: Logger;
 
 	beforeAll(() => {
 		logger = new Logger("DriverManagerUnitTest");
-		logger.info("🧪 Initializing DriverManager unit tests...");
+		logger.info("Initializing DriverManager unit tests...");
 		
 		driverManager = new DriverManager(maccabiConfig);
 	});
@@ -24,7 +22,7 @@ describe("🔧 DriverManager Unit Tests", () => {
 		it("should create DriverManager instance with valid config", () => {
 			// Test that DriverManager can be instantiated
 			assert.ok(driverManager instanceof DriverManager, "Should create DriverManager instance");
-			logger.success("✅ DriverManager instance created successfully");
+			logger.success("DriverManager instance created successfully");
 		});
 
 		it("should accept valid configuration object", () => {
@@ -36,7 +34,7 @@ describe("🔧 DriverManager Unit Tests", () => {
 			assert.ok(testConfig.deviceId, "Config should have deviceId");
 			assert.ok(testConfig.appiumServer, "Config should have appiumServer settings");
 			
-			logger.success("✅ Configuration validation passed");
+			logger.success("Configuration validation passed");
 		});
 	});
 

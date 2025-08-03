@@ -4,47 +4,42 @@ import { MaccabiRegistrationFlow } from "../test/helpers/registration-flow";
 import { maccabiConfig } from "../test/config/app.config";
 import { testUsers, TestUser } from "../test/data/test-data";
 import { Logger } from "../test/utils/logger";
-import { before, after, describe, it } from 'mocha';
 
 /**
- * Comprehensive Maccabi App Test Suite
- * 
- * This file contains all test cases for the Maccabi pregnancy app,
- * organized by functionality and complexity level.
+ * Maccabi App Integration Tests
+ * Comprehensive test suite for all app functionality.
  */
-describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
+describe("Maccabi Pregnancy App - Complete Test Suite", () => {
 	let driverManager: DriverManager;
 	let registrationFlow: MaccabiRegistrationFlow;
 	let logger: Logger;
 
-	before(async function() {
-		this.timeout(60000); // 1 minute timeout for setup
+	beforeAll(async () => {
 		logger = new Logger("MaccabiTestSuite");
-		logger.info("🧪 Initializing comprehensive Maccabi app test suite...");
+		logger.info("Initializing comprehensive Maccabi app test suite...");
 
 		driverManager = new DriverManager(maccabiConfig);
 		await driverManager.initializeDriver();
 
 		registrationFlow = new MaccabiRegistrationFlow(driverManager);
 
-		logger.success("✅ Test suite initialized successfully");
-	});
+		logger.success("Test suite initialized successfully");
+	}, 120000); // Increased timeout to 2 minutes
 
-	after(async () => {
-		logger.info("🔄 Cleaning up test suite...");
+	afterAll(async () => {
+		logger.info("Cleaning up test suite...");
 
 		if (driverManager) {
 			await driverManager.quitDriver();
 		}
 
-		logger.success("✅ Test suite cleanup completed");
+		logger.success("Test suite cleanup completed");
 	});
 
 	// ===== CORE FUNCTIONALITY TESTS =====
-	describe("🔥 Core App Functionality", () => {
+	describe("Core App Functionality", () => {
 		
-		it("🚀 App Launch and Package Verification", async function() {
-			this.timeout(30000);
+		it("App Launch and Package Verification", async () => {
 			logger.step(1, "Testing basic app launch");
 
 			// Launch the app
@@ -58,11 +53,10 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 				`Expected app package ${maccabiConfig.appPackage}, but got ${currentPackage}`
 			);
 
-			logger.success("✅ App launched successfully with correct package");
+			logger.success("App launched successfully with correct package");
 		});
 
-		it("⏱️ Splash Screen Handling", async function() {
-			this.timeout(45000);
+		it("Splash Screen Handling", async () => {
 			logger.step(1, "Testing splash screen behavior");
 
 			// Launch the app
@@ -77,11 +71,10 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 			// Whether registration succeeds or fails, the splash should have been handled
 			assert.ok(typeof registrationResult === "boolean", "Registration flow should complete with boolean result");
 
-			logger.success("✅ Splash screen handled correctly during registration flow");
+			logger.success("Splash screen handled correctly during registration flow");
 		});
 
-		it("🎯 App Navigation Test", async function() {
-			this.timeout(45000);
+		it("App Navigation Test", async () => {
 			logger.step(1, "Testing basic app navigation");
 
 			// Launch the app
@@ -91,15 +84,14 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 			const currentPackage = await registrationFlow.getCurrentPackage();
 			assert.strictEqual(currentPackage, maccabiConfig.appPackage, "Should be in correct app package");
 
-			logger.success(`✅ App navigation working - current package: ${currentPackage}`);
+			logger.success(` App navigation working - current package: ${currentPackage}`);
 		});
 	});
 
 	// ===== REGISTRATION FLOW TESTS =====
-	describe("📝 User Registration Flow Tests", () => {
+	describe(" User Registration Flow Tests", () => {
 
-		it("🎯 Quick Registration Test - Single User", async function() {
-			this.timeout(120000);
+		it("Quick Registration Test - Single User", async () => {
 			logger.step(1, "Starting single user registration test");
 
 			// Use the first test user for quick validation
@@ -125,14 +117,13 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 			const currentPackage = await registrationFlow.getCurrentPackage();
 			assert.strictEqual(currentPackage, maccabiConfig.appPackage);
 
-			logger.success(`✅ Single user registration test completed: ${registrationResult ? "SUCCESS" : "FAILED AS EXPECTED"}`);
+			logger.success(` Single user registration test completed: ${registrationResult ? "SUCCESS" : "FAILED AS EXPECTED"}`);
 		});
 
 		// Data-driven tests for all test users
 		testUsers.forEach((testUser: TestUser) => {
-			it(`👤 Registration Flow: ${testUser.id} (${testUser.registrationData.name}) - ${testUser.registrationData.fetusCount} fetus(es)`, async function() {
-				this.timeout(120000); // 2 minute timeout for each registration test
-				logger.info(`🚀 Starting test for user: ${testUser.id}`);
+			it(`Registration Flow: ${testUser.id} (${testUser.registrationData.name}) - ${testUser.registrationData.fetusCount} fetus(es)`, async () => {
+				logger.info(` Starting test for user: ${testUser.id}`);
 
 				// Launch the app fresh for each test
 				await driverManager.launchApp();
@@ -153,16 +144,15 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 				const currentPackage = await registrationFlow.getCurrentPackage();
 				assert.strictEqual(currentPackage, maccabiConfig.appPackage);
 
-				logger.success(`✅ Test completed for user: ${testUser.id} - Result: ${registrationResult ? "SUCCESS" : "FAILED AS EXPECTED"}`);
+				logger.success(` Test completed for user: ${testUser.id} - Result: ${registrationResult ? "SUCCESS" : "FAILED AS EXPECTED"}`);
 			});
 		});
 	});
 
 	// ===== EDGE CASE AND ERROR HANDLING TESTS =====
-	describe("🛡️ Edge Cases and Error Handling", () => {
+	describe(" Edge Cases and Error Handling", () => {
 
-		it("🔄 App Recovery After Restart", async function() {
-			this.timeout(60000);
+		it("App Recovery After Restart", async () => {
 			logger.step(1, "Testing app recovery after restart");
 
 			// Launch the app normally first
@@ -179,11 +169,10 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 			const packageAfterRestart = await registrationFlow.getCurrentPackage();
 			assert.strictEqual(packageAfterRestart, maccabiConfig.appPackage);
 
-			logger.success("✅ App recovered successfully after restart");
+			logger.success("App recovered successfully after restart");
 		});
 
-		it("⚠️ Handling App State Variations", async function() {
-			this.timeout(45000);
+		it("Handling App State Variations", async () => {
 			logger.step(1, "Testing various app state scenarios");
 
 			// Launch the app
@@ -202,11 +191,10 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 			const currentPackage = await registrationFlow.getCurrentPackage();
 			assert.strictEqual(currentPackage, maccabiConfig.appPackage);
 
-			logger.success("✅ App state variations handled correctly");
+			logger.success("App state variations handled correctly");
 		});
 
-		it("🔍 Basic Navigation Verification", async function() {
-			this.timeout(45000);
+		it("Basic Navigation Verification", async () => {
 			logger.step(1, "Testing basic navigation capabilities");
 
 			// Launch the app
@@ -216,15 +204,14 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 			const currentPackage = await registrationFlow.getCurrentPackage();
 			assert.strictEqual(currentPackage, maccabiConfig.appPackage, "Should maintain correct package");
 
-			logger.success(`✅ Basic navigation verified - package: ${currentPackage}`);
+			logger.success(` Basic navigation verified - package: ${currentPackage}`);
 		});
 	});
 
 	// ===== PERFORMANCE AND STABILITY TESTS =====
-	describe("⚡ Performance and Stability", () => {
+	describe(" Performance and Stability", () => {
 
-		it("🏃‍♂️ Multiple App Launches (Stress Test)", async function() {
-			this.timeout(180000); // 3 minute timeout for stress test
+		it("Multiple App Launches (Stress Test)", async () => {
 			logger.step(1, "Running multiple app launch stress test");
 
 			const launchCount = 3;
@@ -243,11 +230,10 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 				await new Promise(resolve => setTimeout(resolve, 1000));
 			}
 
-			logger.success(`✅ Stress test completed - ${launchCount} successful launches`);
+			logger.success(` Stress test completed - ${launchCount} successful launches`);
 		});
 
-		it("⏱️ App Launch Performance", async function() {
-			this.timeout(45000);
+		it("App Launch Performance", async () => {
 			logger.step(1, "Measuring app launch performance");
 
 			const startTime = Date.now();
@@ -267,15 +253,14 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 			// Assert reasonable launch time (under 30 seconds)
 			assert.ok(launchTime < 30000, `App should launch within 30 seconds, but took ${launchTime}ms`);
 			
-			logger.success(`✅ App launched in ${launchTime}ms - within acceptable range`);
+			logger.success(` App launched in ${launchTime}ms - within acceptable range`);
 		});
 	});
 
 	// ===== INTEGRATION AND END-TO-END TESTS =====
-	describe("🔗 Integration and E2E Tests", () => {
+	describe(" Integration and E2E Tests", () => {
 
-		it("🎭 Complete User Journey - Registration to Dashboard", async function() {
-			this.timeout(150000); // 2.5 minute timeout for full journey
+		it("Complete User Journey - Registration to Dashboard", async () => {
 			logger.step(1, "Starting complete user journey test");
 
 			// Use a test user expected to succeed
@@ -292,7 +277,7 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 			);
 
 			if (registrationResult) {
-				logger.success("✅ Complete user journey successful - registration completed");
+				logger.success("Complete user journey successful - registration completed");
 			} else {
 				logger.info("User registration flow completed with expected outcome");
 			}
@@ -304,10 +289,9 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 	});
 
 	// ===== CLEANUP AND VALIDATION TESTS =====
-	describe("🧹 Cleanup and Validation", () => {
+	describe(" Cleanup and Validation", () => {
 
-		it("🔧 Driver and Session Management", async function() {
-			this.timeout(30000);
+		it("Driver and Session Management", async () => {
 			logger.step(1, "Testing driver and session management");
 
 			// Launch app to test driver functionality
@@ -317,11 +301,10 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 			const currentPackage = await registrationFlow.getCurrentPackage();
 			assert.strictEqual(currentPackage, maccabiConfig.appPackage);
 
-			logger.success("✅ Driver and session management working correctly");
+			logger.success("Driver and session management working correctly");
 		});
 
-		it("📊 Test Suite Metrics Summary", async function() {
-			this.timeout(5000);
+		it("Test Suite Metrics Summary", async () => {
 			logger.step(1, "Generating test suite metrics");
 
 			const metrics = {
@@ -337,7 +320,7 @@ describe("🏥 Maccabi Pregnancy App - Complete Test Suite", () => {
 			// This test always passes - it's just for logging metrics
 			assert.ok(true, "Metrics summary completed");
 
-			logger.success("✅ Test suite metrics generated successfully");
+			logger.success("Test suite metrics generated successfully");
 		});
 	});
 });
