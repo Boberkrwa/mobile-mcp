@@ -78,7 +78,7 @@ describe("Maccabi App Tests", () => {
 		logger.info("Registration test completed, shared driver session kept alive");
 	}, 60000);
 
-	it("Add Pregnancy File", async () => {
+	it("Add Pregnancy File with File Attachment", async () => {
 		console.log("PREGNANCY FILE TEST STARTING - VS CODE SIDEBAR DEBUG");
 		logger.step(1, "Starting add pregnancy file test with file attachment");
 		logger.info("Using shared WebDriver session for pregnancy file test...");
@@ -469,12 +469,11 @@ describe("Maccabi App Tests", () => {
 						logger.info("No confirmation button found - file might be auto-selected");
 					}
 					
-					// Step 7: ULTRA-AGGRESSIVE save button detection and interaction
-					logger.action("Step 7: ULTRA-AGGRESSIVE save button detection...");
+					// Step 7: FOCUSED save button detection and interaction
+					logger.action("Step 7: FOCUSED save button detection...");
 					
-					// NO DELAYS - immediate multi-strategy save button detection
 					try {
-						logger.info("STARTING ULTRA-AGGRESSIVE SAVE DETECTION...");
+						logger.info("STARTING FOCUSED SAVE DETECTION...");
 						
 						// Strategy 1: Your specific resource ID - HIGHEST PRIORITY
 						try {
@@ -486,282 +485,117 @@ describe("Maccabi App Tests", () => {
 								await specificSaveButton.click();
 								logger.success("✅ YOUR SPECIFIC SAVE BUTTON SUCCESSFULLY CLICKED!");
 								
-								// Verify the click worked
-								await new Promise(resolve => setTimeout(resolve, 500));
-								logger.success("Save button interaction verified!");
+								// Immediate verification attempt
+								await new Promise(resolve => setTimeout(resolve, 1000));
+								logger.success("Save button interaction completed!");
 								
-								// Exit immediately after successful click
-								return;
+								// Go directly to verification
 							} else {
-								logger.warning("Your specific save button not found immediately");
-							}
-						} catch (specificError) {
-							logger.error("Specific save button detection failed", specificError);
-						}
-						
-						// Strategy 2: Parallel detection of ALL possible save buttons
-						logger.action("PRIORITY 2: Parallel detection of all save variants...");
-						
-						const allSaveSelectors = [
-							'//*[@resource-id="com.ideomobile.maccabipregnancy:id/bSaveButton"]',
-							'//*[@text="שמירה"]',
-							'//android.widget.Button[contains(@text, "שמירה")]',
-							'//android.widget.TextView[contains(@text, "שמירה")]',
-							'//*[contains(@text, "שמירה")]',
-							'//*[@text="Save"]',
-							'//*[contains(@text, "Save")]',
-							'//android.widget.Button[contains(@text, "Save")]',
-							'android=new UiSelector().text("שמירה")',
-							'android=new UiSelector().textContains("שמירה")',
-							'android=new UiSelector().className("android.widget.Button").textContains("שמירה")'
-						];
-						
-						// Try ALL selectors in rapid succession
-						for (let i = 0; i < allSaveSelectors.length; i++) {
-							const selector = allSaveSelectors[i];
-							
-							try {
-								logger.info(`RAPID ATTEMPT ${i + 1}: ${selector}`);
-								const saveElement = await sharedDriverManager.getDriver().$(selector);
+								logger.warning("Your specific save button not found, trying alternatives");
 								
-								if (await saveElement.isExisting()) {
-									logger.action(`🎯 FOUND SAVE ELEMENT WITH SELECTOR ${i + 1} - CLICKING!`);
-									await saveElement.click();
-									logger.success(`✅ SAVE CLICKED WITH SELECTOR ${i + 1}!`);
-									
-									// Brief verification
-									await new Promise(resolve => setTimeout(resolve, 300));
-									logger.success("Save element click verified!");
-									return; // Exit immediately after successful click
-								}
-							} catch (e) {
-								// Continue immediately to next selector
-							}
-						}
-						
-						// Strategy 3: Screen dump and coordinate-based save detection
-						logger.action("PRIORITY 3: Screen analysis for save button location...");
-						
-						try {
-							// Get current screen source for analysis
-							const pageSource = await sharedDriverManager.getDriver().getPageSource();
-							logger.info("Screen source obtained for save button analysis");
-							
-							// Look for save button patterns in the page source
-							const savePatterns = ['שמירה', 'Save', 'bSaveButton', 'save_button', 'btn_save'];
-							let saveButtonFound = false;
-							
-							for (const pattern of savePatterns) {
-								if (pageSource.includes(pattern)) {
-									logger.action(`FOUND SAVE PATTERN: ${pattern}`);
-									saveButtonFound = true;
-									break;
-								}
-							}
-							
-							if (saveButtonFound) {
-								logger.action("Save button pattern detected - attempting coordinate clicks");
-								
-								// Try multiple save button locations
-								const saveLocations = [
-									{ x: 950, y: 150, desc: "top-right standard" },
-									{ x: 850, y: 200, desc: "top-right alternative" },
-									{ x: 900, y: 100, desc: "top-right high" },
-									{ x: 1000, y: 180, desc: "far top-right" },
-									{ x: 540, y: 150, desc: "top-center" },
-									{ x: 950, y: 2100, desc: "bottom-right" },
-									{ x: 540, y: 2100, desc: "bottom-center" }
+								// Strategy 2: Limited backup selectors
+								const backupSaveSelectors = [
+									'//*[@resource-id="com.ideomobile.maccabipregnancy:id/bSaveButton"]',
+									'//*[@text="שמירה"]',
+									'//android.widget.Button[contains(@text, "שמירה")]',
+									'android=new UiSelector().text("שמירה")'
 								];
 								
-								for (const location of saveLocations) {
+								let saveFound = false;
+								for (const selector of backupSaveSelectors) {
 									try {
-										logger.action(`Trying save location: ${location.desc} (${location.x}, ${location.y})`);
+										const saveElement = await sharedDriverManager.getDriver().$(selector);
+										if (await saveElement.isExisting()) {
+											logger.action(`🎯 FOUND SAVE with backup selector: ${selector}`);
+											await saveElement.click();
+											logger.success("✅ BACKUP SAVE CLICKED!");
+											saveFound = true;
+											break;
+										}
+									} catch (e) {
+										// Continue to next selector
+									}
+								}
+								
+								if (!saveFound) {
+									logger.warning("No save button found with selectors, trying coordinate approach");
+									// Strategy 3: Single coordinate click attempt
+									try {
+										const tapX = 950;  // Top-right save button location
+										const tapY = 150;
 										
 										await sharedDriverManager.getDriver().action('pointer')
-											.move({ x: location.x, y: location.y })
+											.move({ x: tapX, y: tapY })
 											.down()
 											.up()
 											.perform();
 										
-										logger.success(`✅ COORDINATE SAVE CLICK ATTEMPTED: ${location.desc}`);
-										
-										// Brief pause to see if save worked
-										await new Promise(resolve => setTimeout(resolve, 200));
-										
+										logger.success("✅ COORDINATE SAVE ATTEMPT COMPLETED");
 									} catch (coordError) {
-										logger.info(`Coordinate ${location.desc} skipped: ${coordError instanceof Error ? coordError.message : 'Unknown error'}`);
+										logger.warning("Coordinate save attempt failed");
+									}
+								}
+							}
+						} catch (specificError) {
+							logger.error("Save button detection failed", specificError);
+						}
+						
+						// Give save operation time to complete
+						await new Promise(resolve => setTimeout(resolve, 2000));
+						logger.success("Save detection completed - proceeding to verification");
+						
+						// Step 8: CRITICAL VERIFICATION - Check if file appears in pregnancy folder
+						logger.action("Step 8: VERIFYING save success - looking for saved file in pregnancy folder...");
+						
+						try {
+							// Wait for save operation to complete and UI to update
+							await new Promise(resolve => setTimeout(resolve, 3000));
+							
+							// Look for the saved file using BOTH specific selectors you provided
+							logger.info("Checking for saved file with PRIMARY selectors:");
+							logger.info("1. File cover: com.ideomobile.maccabipregnancy:id/ivFileCover");
+							logger.info("2. File name: com.ideomobile.maccabipregnancy:id/tvFileName");
+							
+							// Check both elements
+							const savedFileElement = await sharedDriverManager.getDriver().$('android=new UiSelector().resourceId("com.ideomobile.maccabipregnancy:id/ivFileCover")');
+							const savedFileNameElement = await sharedDriverManager.getDriver().$('android=new UiSelector().resourceId("com.ideomobile.maccabipregnancy:id/tvFileName")');
+							
+							// Quick existence check
+							const fileCoverExists = await savedFileElement.isExisting();
+							const fileNameExists = await savedFileNameElement.isExisting();
+							
+							if (fileCoverExists || fileNameExists) {
+								logger.success("🎉 SUCCESS! File successfully saved and visible in pregnancy folder!");
+								
+								if (fileCoverExists) {
+									logger.success("✅ VERIFICATION PASSED: Found saved file cover with 'com.ideomobile.maccabipregnancy:id/ivFileCover'");
+								}
+								
+								if (fileNameExists) {
+									logger.success("✅ VERIFICATION PASSED: Found saved file name with 'com.ideomobile.maccabipregnancy:id/tvFileName'");
+									
+									// Try to get the actual filename
+									try {
+										const fileName = await savedFileNameElement.getText();
+										logger.info(`📁 Saved file name: "${fileName}"`);
+									} catch (nameError) {
+										logger.info("Could not retrieve filename text, but element exists");
 									}
 								}
 								
-								logger.success("Multiple coordinate save attempts completed!");
 							} else {
-								logger.info("No save button patterns found in screen source");
+								logger.warning("⚠️ VERIFICATION FAILED: Neither file cover nor filename found with expected selectors");
+								logger.warning("This might indicate save operation did not complete successfully");
 							}
 							
-						} catch (screenError) {
-							logger.error("Screen analysis failed", screenError);
+						} catch (verificationError) {
+							logger.error("Error during save verification", verificationError);
+							logger.warning("Could not verify if file was saved successfully");
 						}
-						
-						// Strategy 4: Touch all visible elements that might be save buttons
-						logger.action("PRIORITY 4: Touching all potential save elements...");
-						
-						try {
-							// Find all clickable elements that might be save buttons
-							const allButtons = await sharedDriverManager.getDriver().$$('//android.widget.Button[@clickable="true"]');
-							const allTextViews = await sharedDriverManager.getDriver().$$('//android.widget.TextView[@clickable="true"]');
-							const allImageButtons = await sharedDriverManager.getDriver().$$('//android.widget.ImageButton[@clickable="true"]');
-							
-							const allClickableElements = [...allButtons, ...allTextViews, ...allImageButtons];
-							
-							logger.info(`Found ${allClickableElements.length} clickable elements - checking for save buttons`);
-							
-							for (let i = 0; i < Math.min(allClickableElements.length, 10); i++) { // Limit to first 10 elements
-								try {
-									const element = allClickableElements[i];
-									const elementText = await element.getText();
-									const elementId = await element.getAttribute('resource-id');
-									
-									// Check if this looks like a save button
-									if (elementText.includes('שמירה') || 
-									    elementText.includes('Save') || 
-									    elementId && elementId.includes('save') ||
-									    elementId && elementId.includes('Save') ||
-									    elementId && elementId.includes('bSaveButton')) {
-										
-										logger.action(`🎯 POTENTIAL SAVE ELEMENT FOUND: text="${elementText}", id="${elementId}" - CLICKING!`);
-										await element.click();
-										logger.success(`✅ CLICKED POTENTIAL SAVE ELEMENT ${i + 1}!`);
-										
-										await new Promise(resolve => setTimeout(resolve, 200));
-									}
-								} catch (elementError) {
-									// Continue to next element
-								}
-							}
-							
-							logger.success("All potential save elements processed!");
-							
-						} catch (elementsError) {
-							logger.error("Element enumeration failed", elementsError);
-						}
-						
-						logger.success("🔥 ULTRA-AGGRESSIVE SAVE DETECTION COMPLETED - Multiple strategies attempted!");
 						
 					} catch (saveError) {
 						logger.info("Save detection process completed", saveError);
 					}
-					
-					// Step 8: CRITICAL VERIFICATION - Check if file appears in pregnancy folder
-					logger.action("Step 8: VERIFYING save success - looking for saved file in pregnancy folder...");
-					
-					try {
-						// Wait for save operation to complete and UI to update
-						await new Promise(resolve => setTimeout(resolve, 3000));
-						
-						// Look for the saved file using BOTH specific selectors you provided
-						logger.info("Checking for saved file with PRIMARY selectors:");
-						logger.info("1. File cover: com.ideomobile.maccabipregnancy:id/ivFileCover");
-						logger.info("2. File name: com.ideomobile.maccabipregnancy:id/tvFileName");
-						
-						const savedFileElement = await sharedDriverManager.getDriver().$('android=new UiSelector().resourceId("com.ideomobile.maccabipregnancy:id/ivFileCover")');
-						const savedFileNameElement = await sharedDriverManager.getDriver().$('android=new UiSelector().resourceId("com.ideomobile.maccabipregnancy:id/tvFileName")');
-						
-						// Check both elements
-						const fileCoverExists = await savedFileElement.isExisting();
-						const fileNameExists = await savedFileNameElement.isExisting();
-						
-						if (fileCoverExists || fileNameExists) {
-							logger.success("🎉 SUCCESS! File successfully saved and visible in pregnancy folder!");
-							
-							if (fileCoverExists) {
-								logger.success("✅ VERIFICATION PASSED: Found saved file cover with 'com.ideomobile.maccabipregnancy:id/ivFileCover'");
-							}
-							
-							if (fileNameExists) {
-								logger.success("✅ VERIFICATION PASSED: Found saved file name with 'com.ideomobile.maccabipregnancy:id/tvFileName'");
-								
-								// Try to get the actual filename
-								try {
-									const fileName = await savedFileNameElement.getText();
-									logger.info(`📁 Saved file name: "${fileName}"`);
-								} catch (nameError) {
-									logger.info("Could not retrieve filename text, but element exists");
-								}
-							}
-							
-							// Additional verification for both elements
-							if (fileCoverExists) {
-								try {
-									const isDisplayed = await savedFileElement.isDisplayed();
-									const isClickable = await savedFileElement.isClickable();
-									logger.info(`File cover details - Displayed: ${isDisplayed}, Clickable: ${isClickable}`);
-								} catch (detailError) {
-									logger.info("Could not get file cover details, but element exists");
-								}
-							}
-							
-							if (fileNameExists) {
-								try {
-									const isDisplayed = await savedFileNameElement.isDisplayed();
-									const isClickable = await savedFileNameElement.isClickable();
-									logger.info(`File name details - Displayed: ${isDisplayed}, Clickable: ${isClickable}`);
-								} catch (detailError) {
-									logger.info("Could not get file name details, but element exists");
-								}
-							}
-							
-						} else {
-							logger.warning("⚠️ VERIFICATION FAILED: Neither file cover nor filename found with expected selectors");
-							logger.warning("This might indicate save operation did not complete successfully");
-							
-							// Try alternative verification methods
-							logger.info("Attempting alternative verification methods...");
-							
-							// Check for any file-related elements in the current screen
-							const alternativeSelectors = [
-								'//*[@resource-id="com.ideomobile.maccabipregnancy:id/ivFileCover"]',
-								'//*[@resource-id="com.ideomobile.maccabipregnancy:id/tvFileName"]',
-								'//android.widget.ImageView[contains(@resource-id, "File")]',
-								'//android.widget.ImageView[contains(@resource-id, "Cover")]',
-								'//android.widget.TextView[contains(@resource-id, "FileName")]',
-								'//*[contains(@resource-id, "file")]',
-								'//*[contains(@resource-id, "File")]'
-							];
-							
-							let alternativeFound = false;
-							for (const selector of alternativeSelectors) {
-								try {
-									const altElement = await sharedDriverManager.getDriver().$(selector);
-									if (await altElement.isExisting()) {
-										logger.success(`✅ ALTERNATIVE VERIFICATION: Found file element with selector: ${selector}`);
-										
-										// Try to get text if it's a text element
-										try {
-											const altText = await altElement.getText();
-											if (altText) {
-												logger.info(`Alternative element text: "${altText}"`);
-											}
-										} catch (e) {
-											// Continue
-										}
-										
-										alternativeFound = true;
-									}
-								} catch (e) {
-									// Continue to next selector
-								}
-							}
-							
-							if (!alternativeFound) {
-								logger.error("❌ NO FILE ELEMENTS FOUND - Save operation may have failed");
-							}
-						}
-						
-					} catch (verificationError) {
-						logger.error("Error during save verification", verificationError);
-						logger.warning("Could not verify if file was saved successfully");
-					}
-					
 				} else {
 					logger.warning("Could not select a file, but file picker was opened successfully");
 				}
@@ -811,5 +645,5 @@ describe("Maccabi App Tests", () => {
 		}
 		
 		logger.info("Pregnancy file test completed, driver session kept alive");
-	}, 120000); // Extended timeout for camera operations
+	}, 180000); // Extended timeout for complete flow with verification
 });

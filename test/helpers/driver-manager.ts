@@ -48,7 +48,18 @@ export class DriverManager {
 	async launchApp(): Promise<void> {
 		try {
 			this.logger.info(`Launching app: ${this.config.appPackage}`);
-			await this.driver.startActivity(this.config.appPackage, this.config.appActivity);
+			
+			// First try to activate the app if it's already installed
+			try {
+				await this.driver.activateApp(this.config.appPackage);
+				this.logger.info("App activated successfully");
+			} catch (activateError) {
+				// If activate fails, try starting the activity
+				this.logger.info("Activate failed, trying startActivity...");
+				await this.driver.startActivity(this.config.appPackage, this.config.appActivity);
+				this.logger.info("App started successfully");
+			}
+			
 			await this.driver.pause(3000);
 			this.logger.info("App launched successfully");
 		} catch (error) {

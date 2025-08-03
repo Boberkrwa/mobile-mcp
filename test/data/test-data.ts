@@ -60,10 +60,10 @@ export const testUsers: TestUser[] = [
 ];
 
 export const appConstants = {
-	splashScreenMaxAttempts: 10,
-	skipButtonMaxAttempts: 5,
-	defaultPauseTime: 2000,
-	longPauseTime: 3000,
+	splashScreenMaxAttempts: 5,     // Reduced from 10
+	skipButtonMaxAttempts: 3,       // Reduced from 5
+	defaultPauseTime: 1000,         // Reduced from 2000
+	longPauseTime: 1500,            // Reduced from 3000
 	androidBackButton: 4,
 	hebrewLocale: "he-IL"
 };

@@ -29,9 +29,9 @@ export const maccabiConfig: AppConfig = {
 		path: "/"
 	},
 	timeouts: {
-		implicit: 10000,
-		explicit: 30000,
-		pageLoad: 60000
+		implicit: 5000,  // Reduced from 10000
+		explicit: 15000, // Reduced from 30000
+		pageLoad: 30000  // Reduced from 60000
 	},
 	capabilities: {
 		platformName: "Android",
