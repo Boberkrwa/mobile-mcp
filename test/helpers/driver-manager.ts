@@ -45,10 +45,18 @@ export class DriverManager {
 		}
 	}
 
+	// Added check to verify if the app is already running before activation or starting activity
 	async launchApp(): Promise<void> {
 		try {
 			this.logger.info(`Launching app: ${this.config.appPackage}`);
-			
+
+			// Check if the app is already running
+			const currentPackage = await this.driver.getCurrentPackage();
+			if (currentPackage === this.config.appPackage) {
+				this.logger.info("App is already running, skipping launch.");
+				return;
+			}
+
 			// First try to activate the app if it's already installed
 			try {
 				await this.driver.activateApp(this.config.appPackage);
