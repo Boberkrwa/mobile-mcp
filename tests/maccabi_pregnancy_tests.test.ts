@@ -13,10 +13,9 @@ describe("Maccabi App Tests", () => {
 	// Shared instances across all tests
 	let sharedDriverManager: DriverManager;
 	let sharedRegistrationFlow: MaccabiRegistrationFlow;
-	let logger: Logger;
+	let logger: Logger = new Logger("MaccabiTestSuite");
 
 	beforeAll(async () => {
-		logger = new Logger("MaccabiTest");
 		logger.info("Initializing Maccabi test suite...");
 
 		// Initialize shared driver session once
@@ -52,8 +51,8 @@ describe("Maccabi App Tests", () => {
 			
 			// Clear app data using ADB command through driver
 			logger.info("Clearing app data to reset registration state...");
-			await sharedDriverManager.getDriver().execute('mobile: shell', {
-				command: 'pm clear com.ideomobile.maccabipregnancy'
+			await sharedDriverManager.getDriver().execute("mobile: shell", {
+				command: "pm clear com.ideomobile.maccabipregnancy"
 			});
 			await new Promise(resolve => setTimeout(resolve, 2000));
 			logger.success("App cache and data cleared successfully!");
@@ -236,7 +235,6 @@ describe("Maccabi App Tests", () => {
 
 		// Refactored code for 'Personal Area' button
 		logger.action("Step 1: Looking for 'איזור אישי' (Personal Area) button...");
-		let personalAreaSuccess = false;
 		personalAreaSuccess = await detectAndInteract(
 			'//*[contains(@text, "איזור אישי")]',
 			async (element) => {
@@ -813,30 +811,21 @@ describe("Maccabi App Tests", () => {
 	} catch (error) {
 		console.log("MAJOR ERROR in pregnancy file test:", error);
 		logger.error("Error during pregnancy file test execution", error);
-		// Log the error details for debugging
 		if (error instanceof Error) {
-			console.log(`Error message: ${error.message}`);
-			console.log(`Error stack: ${error.stack}`);
 			logger.error(`Error message: ${error.message}`);
 			logger.error(`Error stack: ${error.stack}`);
 		}
-		// Don't throw - let test pass to avoid restart loops but make the error visible
 	}
-	
-	logger.info("Test completed with file attachment approach");
 
-	// Navigate back to home page for clean state
+	logger.info("Test completed with file attachment approach");
 	logger.info("Preparing for next test - checking app state...");
+
 	try {
-		// Check if session is still active
 		const currentPackage = await sharedDriverManager.getDriver().getCurrentPackage();
-		
 		if (currentPackage === "com.ideomobile.maccabipregnancy") {
 			logger.info("App still active, performing clean restart...");
 			await sharedDriverManager.getDriver().terminateApp('com.ideomobile.maccabipregnancy');
-			await new Promise(resolve => setTimeout(resolve, 1000));
 			await sharedDriverManager.getDriver().activateApp('com.ideomobile.maccabipregnancy');
-			await new Promise(resolve => setTimeout(resolve, 2000));
 			logger.success("Successfully returned to home page");
 		} else {
 			logger.info("App session already transitioned, launching fresh instance...");
@@ -846,7 +835,7 @@ describe("Maccabi App Tests", () => {
 	} catch (navError) {
 		logger.info("Session management completed - app state ready for next test", navError);
 	}
-	
+
 	logger.info("Pregnancy file test completed, driver session kept alive");
 }, 120000); // Extended timeout for file attachment operations
 });
