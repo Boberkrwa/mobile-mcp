@@ -24,6 +24,49 @@
             }
         },
         {
+            "label": "Run Maccabi Test with Logger Output",
+            "type": "shell",
+            "command": "npx",
+            "args": ["ts-node", "run-maccabi-test.ts"],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "options": {
+                "env": {
+                    "DEBUG": "true",
+                    "NODE_ENV": "test"
+                }
+            }
+        },
+        {
+            "label": "Run Maccabi Pregnancy Tests (Jest)",
+            "type": "shell",
+            "command": "npx",
+            "args": ["jest", "tests/maccabi_pregnancy_tests.test.ts", "--verbose", "--no-coverage"],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "options": {
+                "env": {
+                    "DEBUG": "true"
+                }
+            }
+        },
+        {
             "label": "Run Jest Tests",
             "type": "shell",
             "command": "npm",

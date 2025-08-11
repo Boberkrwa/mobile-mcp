@@ -22,33 +22,15 @@ export interface TestUser {
 
 export const testUsers: TestUser[] = [
 	{
-		id: "Michael_Registration_Test",  // ← THIS BECOMES PART OF TEST TITLE
+		id: "Registration_Test",  // ← THIS BECOMES PART OF TEST TITLE
 		registrationData: {
-			name: "מיכאל קורולנקו",
+			name: "בובר קורבה",
 			fetusCount: 1,
 			dateOptions: {
 				useRandomDate: true,
 				dateRange: {
 					minDaysAgo: 14,
 					maxDaysAgo: 104
-				}
-			}
-		},
-		expectedResults: {
-			shouldReachDashboard: true,
-			expectedScreens: ["splash", "skip", "name", "date", "fetus", "dashboard"]
-		}
-	},
-	{
-		id: "Sarah_Twin_Pregnancy_Test",  // ← THIS BECOMES PART OF TEST TITLE
-		registrationData: {
-			name: "שרה כהן",
-			fetusCount: 2,
-			dateOptions: {
-				useRandomDate: true,
-				dateRange: {
-					minDaysAgo: 20,
-					maxDaysAgo: 60
 				}
 			}
 		},

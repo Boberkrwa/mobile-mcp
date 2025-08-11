@@ -17,15 +17,15 @@ export class Logger {
 	}
 
 	info(message: string, data?: any): void {
-		console.log(`ℹ️ ${this.formatMessage("INFO", message, data)}`);
+		console.log(`${this.formatMessage("INFO", message, data)}`);
 	}
 
 	success(message: string, data?: any): void {
-		console.log(`✅ ${this.formatMessage("SUCCESS", message, data)}`);
+		console.log(`${this.formatMessage("SUCCESS", message, data)}`);
 	}
 
 	warning(message: string, data?: any): void {
-		console.warn(`⚠️ ${this.formatMessage("WARNING", message, data)}`);
+		console.warn(`${this.formatMessage("WARNING", message, data)}`);
 	}
 
 	error(message: string, error?: any): void {
@@ -33,21 +33,21 @@ export class Logger {
 			message: error.message,
 			stack: error.stack
 		} : undefined;
-		console.error(`❌ ${this.formatMessage("ERROR", message, errorData)}`);
+		console.error(`${this.formatMessage("ERROR", message, errorData)}`);
 	}
 
 	debug(message: string, data?: any): void {
 		if (Logger.isDebugMode) {
-			console.log(`🔍 ${this.formatMessage("DEBUG", message, data)}`);
+			console.log(`${this.formatMessage("DEBUG", message, data)}`);
 		}
 	}
 
 	step(stepNumber: number, description: string): void {
-		console.log(`🔄 Step ${stepNumber}: ${description}`);
+		console.log(`Step ${stepNumber}: ${description}`);
 	}
 
 	action(description: string): void {
-		console.log(`🎯 ${description}`);
+		console.log(`${description}`);
 	}
 
 	static setDebugMode(enabled: boolean): void {

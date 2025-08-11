@@ -67,7 +67,7 @@ export class DriverManager {
 				await this.driver.startActivity(this.config.appPackage, this.config.appActivity);
 				this.logger.info("App started successfully");
 			}
-			
+
 			await this.driver.pause(3000);
 			this.logger.info("App launched successfully");
 		} catch (error) {
