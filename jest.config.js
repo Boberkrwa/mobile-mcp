@@ -3,24 +3,19 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testTimeout: 60000,
-  extensionsToTreatAsEsm: ['.ts'],
-  globals: {
-    'ts-jest': {
-      useESM: true,
-      tsconfig: {
-        module: 'ES2022'
-      }
-    }
-  },
+  // Remove ESM configuration that's causing issues
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
-      useESM: true,
+      // Use CommonJS instead of ESM for better compatibility
+      tsconfig: {
+        module: 'CommonJS'
+      }
     }],
   },
-  moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1',
-  },
+  // Keep transform ignore patterns for webdriverio
   transformIgnorePatterns: [
     'node_modules/(?!(webdriverio|@wdio)/)'
   ],
+  // Add setupFilesAfterEnv if needed for global setup
+  setupFilesAfterEnv: [],
 };

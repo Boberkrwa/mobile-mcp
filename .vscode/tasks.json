@@ -1,50 +1,7 @@
 {
     "version": "2.0.0",
     "tasks": [
-        {
-            "label": "Run Maccabi Test (Standalone)",
-            "type": "shell",
-            "command": "npx",
-            "args": ["ts-node", "run-maccabi-test.ts"],
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            },
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "new",
-                "showReuseMessage": true,
-                "clear": false
-            },
-            "problemMatcher": [],
-            "runOptions": {
-                "runOn": "default"
-            }
-        },
-        {
-            "label": "Run Maccabi Test with Logger Output",
-            "type": "shell",
-            "command": "npx",
-            "args": ["ts-node", "run-maccabi-test.ts"],
-            "group": "test",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": true,
-                "panel": "dedicated",
-                "showReuseMessage": false,
-                "clear": true
-            },
-            "problemMatcher": [],
-            "options": {
-                "env": {
-                    "DEBUG": "true",
-                    "NODE_ENV": "test"
-                }
-            }
-        },
+
         {
             "label": "Run Maccabi Pregnancy Tests (Jest)",
             "type": "shell",
@@ -110,28 +67,7 @@
                 "runOn": "default"
             }
         },
-        {
-            "label": "Run Upload Verification",
-            "type": "shell",
-            "command": "node",
-            "args": ["complete-upload-with-verification.js"],
-            "group": {
-                "kind": "test",
-                "isDefault": false
-            },
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "new",
-                "showReuseMessage": true,
-                "clear": false
-            },
-            "problemMatcher": [],
-            "runOptions": {
-                "runOn": "default"
-            }
-        },
+
         {
             "label": "Run All Tests",
             "type": "shell",
