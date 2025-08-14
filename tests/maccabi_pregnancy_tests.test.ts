@@ -300,7 +300,7 @@ describe("Maccabi App Tests", () => {
 				// Verify recovery worked
 				const recoveredPackage = await sharedDriverManager.getDriver().getCurrentPackage();
 				if (recoveredPackage === "com.ideomobile.maccabipregnancy") {
-					logger.success("✓ Crash recovery successful");
+					logger.success("Crash recovery successful");
 					return true;
 				} else {
 					logger.error(`Recovery failed - unexpected package: ${recoveredPackage}`);
@@ -390,8 +390,8 @@ describe("Maccabi App Tests", () => {
 				await tempDriverManager.quitDriver();
 				await new Promise(resolve => setTimeout(resolve, 2000));
 
-				logger.success("✓ MANUAL CACHE CLEARING COMPLETED");
-				console.log("✓ SUCCESS: App data cleared with temporary driver");
+				logger.success("MANUAL CACHE CLEARING COMPLETED");
+				console.log("SUCCESS: App data cleared with temporary driver");
 			} catch (tempError) {
 				logger.warning("Manual clearing with temp driver failed", tempError);
 			}
@@ -400,8 +400,8 @@ describe("Maccabi App Tests", () => {
 			logger.info("Step 1d: Reinitializing main driver with fresh state");
 			await sharedDriverManager.initializeDriver();
 
-			logger.success("✓ DRIVER RESET COMPLETED - Fresh session initialized");
-			console.log("✓ FRESH STATE: Driver reinitialized with clean state");
+			logger.success("DRIVER RESET COMPLETED - Fresh session initialized");
+			console.log("FRESH STATE: Driver reinitialized with clean state");
 
 		} catch (resetError) {
 			logger.error("Driver reset failed", resetError);
@@ -427,8 +427,8 @@ describe("Maccabi App Tests", () => {
 			// Wait for app to initialize with fresh state
 			await new Promise(resolve => setTimeout(resolve, 8000)); // Extended wait for fresh state
 
-			logger.success("✓ APP LAUNCHED WITH FRESH CACHE STATE");
-			console.log("✓ CONFIRMED: App launched with cleared data");
+			logger.success("APP LAUNCHED WITH FRESH CACHE STATE");
+			console.log("CONFIRMED: App launched with cleared data");
 
 		} catch (launchError) {
 			logger.error("App launch failed after cache clear", launchError);
@@ -454,8 +454,8 @@ describe("Maccabi App Tests", () => {
 			logger.info("Checking page content for registration indicators...");
 
 			if (pageSource.includes("שמך הפרטי")) {
-				logger.success("✓ REGISTRATION SCREEN FOUND - Cache clear SUCCESS!");
-				console.log("✓ SUCCESS: Registration screen detected - cache clearing worked!");
+				logger.success("REGISTRATION SCREEN FOUND - Cache clear SUCCESS!");
+				console.log("SUCCESS: Registration screen detected - cache clearing worked!");
 				cacheCleared = true;
 			} else if (pageSource.includes("איזור אישי") || pageSource.includes("Personal Area") || pageSource.includes("home")) {
 				logger.error("✗ HOME PAGE FOUND - Cache clear FAILED!");
@@ -469,8 +469,8 @@ describe("Maccabi App Tests", () => {
 				const onboardingIndicators = ["ברוכים הבאים", "Welcome", "התחל", "Start", "Get Started", "Continue"];
 				for (const indicator of onboardingIndicators) {
 					if (pageSource.includes(indicator)) {
-						logger.success(`✓ ONBOARDING FOUND (${indicator}) - Cache clear SUCCESS!`);
-						console.log(`✓ SUCCESS: Onboarding screen detected - cache clearing worked!`);
+						logger.success(`ONBOARDING FOUND (${indicator}) - Cache clear SUCCESS!`);
+						console.log(`SUCCESS: Onboarding screen detected - cache clearing worked!`);
 						cacheCleared = true;
 						break;
 					}
@@ -482,8 +482,8 @@ describe("Maccabi App Tests", () => {
 				const permissionIndicators = ["Allow", "הרשאה", "Permission", "אפשר"];
 				for (const indicator of permissionIndicators) {
 					if (pageSource.includes(indicator)) {
-						logger.success(`✓ PERMISSION REQUEST FOUND (${indicator}) - Cache clear SUCCESS!`);
-						console.log(`✓ SUCCESS: Permission request detected - cache clearing worked!`);
+						logger.success(`PERMISSION REQUEST FOUND (${indicator}) - Cache clear SUCCESS!`);
+						console.log(`SUCCESS: Permission request detected - cache clearing worked!`);
 						cacheCleared = true;
 						break;
 					}
@@ -657,8 +657,8 @@ describe("Maccabi App Tests", () => {
 				logger.warning("Plus button step failed", e);
 			}
 
-			// STEP 4: Press "צירוף קבצים" (Attach Files) button
-			logger.action("Step 4: Looking for 'צירוף קבצים' (Attach Files) button...");
+			// STEP 4: Press צירוף קבצים button
+			logger.action("Step 4: Looking for צירוף קבצים button...");
 
 			let attachFilesSuccess = false;
 
@@ -828,8 +828,8 @@ describe("Maccabi App Tests", () => {
 					await new Promise(resolve => setTimeout(resolve, 2000));
 
 					const confirmSelectors = [
-						'//*[@text="אישור"]', // Hebrew "Confirm"
-						'//*[@text="בחר"]', // Hebrew "Select"
+						'//*[@text="אישור"]',
+						'//*[@text="בחר"]',
 						'//*[@text="OK"]',
 						'//*[@text="Done"]',
 						'//*[@text="Select"]',
@@ -960,7 +960,7 @@ describe("Maccabi App Tests", () => {
 				logger.action("Found Week Info button, clicking it");
 				await weekInfoButton.click();
 				await new Promise(resolve => setTimeout(resolve, 3000));
-				logger.success("✅ Week Info button clicked successfully");
+				logger.success("Week Info button clicked successfully");
 
 				// Look for right arrow and click it
 				logger.action("Looking for right arrow button");
@@ -970,7 +970,7 @@ describe("Maccabi App Tests", () => {
 					logger.action("Found right arrow button, clicking it");
 					await rightArrowButton.click();
 					await new Promise(resolve => setTimeout(resolve, 2000));
-					logger.success("✅ Right arrow clicked successfully");
+					logger.success("Right arrow clicked successfully");
 				} else {
 					logger.warning("Right arrow not found");
 				}
@@ -985,7 +985,7 @@ describe("Maccabi App Tests", () => {
 			throw error;
 		}
 
-		logger.success("✅ WeekInfo test completed");
+		logger.success("WeekInfo test completed");
 	}, 60000);
 
 });
