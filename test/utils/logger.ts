@@ -7,38 +7,38 @@ export class Logger {
 	}
 
 	private getTimestamp(): string {
-		return new Date().toISOString();
+		return new Date().toISOString().split("T")[1].split(".")[0];
 	}
 
 	private formatMessage(level: string, message: string, data?: any): string {
 		const timestamp = this.getTimestamp();
-		const dataStr = data ? ` | Data: ${JSON.stringify(data, null, 2)}` : "";
-		return `[${timestamp}] [${level}] [${this.context}] ${message}${dataStr}`;
+		const dataStr = data ? ` | ${JSON.stringify(data)}` : "";
+		return `[${timestamp}] [${level}] ${message}${dataStr}`;
 	}
 
 	info(message: string, data?: any): void {
-		console.log(`${this.formatMessage("INFO", message, data)}`);
+		console.log(this.formatMessage("INFO", message, data));
 	}
 
 	success(message: string, data?: any): void {
-		console.log(`${this.formatMessage("SUCCESS", message, data)}`);
+		console.log(this.formatMessage("✓", message, data));
 	}
 
 	warning(message: string, data?: any): void {
-		console.warn(`${this.formatMessage("WARNING", message, data)}`);
+		console.warn(this.formatMessage("⚠", message, data));
 	}
 
 	error(message: string, error?: any): void {
 		const errorData = error ? {
 			message: error.message,
-			stack: error.stack
+			stack: error.stack?.split("\n")[0]
 		} : undefined;
-		console.error(`${this.formatMessage("ERROR", message, errorData)}`);
+		console.error(this.formatMessage("✗", message, errorData));
 	}
 
 	debug(message: string, data?: any): void {
 		if (Logger.isDebugMode) {
-			console.log(`${this.formatMessage("DEBUG", message, data)}`);
+			console.log(this.formatMessage("DEBUG", message, data));
 		}
 	}
 
@@ -47,7 +47,7 @@ export class Logger {
 	}
 
 	action(description: string): void {
-		console.log(`${description}`);
+		console.log(`• ${description}`);
 	}
 
 	static setDebugMode(enabled: boolean): void {
