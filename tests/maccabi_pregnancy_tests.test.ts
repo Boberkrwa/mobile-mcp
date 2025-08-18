@@ -4,7 +4,7 @@ import { testUsers } from "../test/data/test-data";
 import { Logger } from "../test/utils/logger";
 import { MaccabiSelectors } from "../test/config/selectors";
 
-describe("Maccabi App Tests", () => {
+describe("Maccabi Pregnancy App Tests", () => {
 	let sharedDriverManager: DriverManager;
 	const logger: Logger = new Logger("MaccabiTestSuite");
 
@@ -76,7 +76,7 @@ describe("Maccabi App Tests", () => {
 			const testUser = testUsers[0];
 
 			// Enter name
-			const nameInput = await sharedDriverManager.getDriver().$(MaccabiSelectors.NAME_INPUT);
+			const nameInput = await sharedDriverManager.getDriver().$(MaccabiSelectors.Name_Input);
 			if (await nameInput.isExisting()) {
 				await nameInput.setValue(testUser.registrationData.name);
 			} else {
@@ -84,7 +84,7 @@ describe("Maccabi App Tests", () => {
 			}
 
 			// Click next
-			const nextButton = await sharedDriverManager.getDriver().$(MaccabiSelectors.NEXT_BUTTON);
+			const nextButton = await sharedDriverManager.getDriver().$(MaccabiSelectors.Next_Button);
 			if (await nextButton.isExisting()) {
 				await nextButton.click();
 				await new Promise(resolve => setTimeout(resolve, 2000));
@@ -109,7 +109,7 @@ describe("Maccabi App Tests", () => {
 				selectedDate.setDate(selectedDate.getDate() - 30);
 			}
 
-			const dateInput = await sharedDriverManager.getDriver().$(MaccabiSelectors.DATE_INPUT);
+			const dateInput = await sharedDriverManager.getDriver().$(MaccabiSelectors.Date_Input);
 			if (await dateInput.isExisting()) {
 				await dateInput.click();
 				await new Promise(resolve => setTimeout(resolve, 3000));
@@ -121,7 +121,7 @@ describe("Maccabi App Tests", () => {
 
 				await new Promise(resolve => setTimeout(resolve, 1000));
 				try {
-					const confirmButton = await sharedDriverManager.getDriver().$(MaccabiSelectors.CONFIRM_BUTTONS);
+					const confirmButton = await sharedDriverManager.getDriver().$(MaccabiSelectors.Confirm_Buttons);
 					if (await confirmButton.isExisting()) {
 						await confirmButton.click();
 						await new Promise(resolve => setTimeout(resolve, 1000));
@@ -141,7 +141,7 @@ describe("Maccabi App Tests", () => {
 
 			// Continue to next screen
 			await new Promise(resolve => setTimeout(resolve, 1500));
-			const nextButton2 = await sharedDriverManager.getDriver().$(MaccabiSelectors.NEXT_BUTTON);
+			const nextButton2 = await sharedDriverManager.getDriver().$(MaccabiSelectors.Next_Button);
 			if (await nextButton2.isExisting()) {
 				await nextButton2.click();
 				await new Promise(resolve => setTimeout(resolve, 2000));
@@ -157,7 +157,7 @@ describe("Maccabi App Tests", () => {
 			}
 
 			// Final next button
-			const nextButton3 = await sharedDriverManager.getDriver().$(MaccabiSelectors.NEXT_BUTTON);
+			const nextButton3 = await sharedDriverManager.getDriver().$(MaccabiSelectors.Next_Button);
 			if (await nextButton3.isExisting()) {
 				await nextButton3.click();
 				await new Promise(resolve => setTimeout(resolve, 3000));
@@ -521,7 +521,7 @@ describe("Maccabi App Tests", () => {
 				throw new Error("Not in correct app");
 			}
 
-			const weekInfoButton = await sharedDriverManager.getDriver().$(MaccabiSelectors.WEEK_INFO_BUTTON);
+			const weekInfoButton = await sharedDriverManager.getDriver().$(MaccabiSelectors.Week_Info_Button);
 			if (await weekInfoButton.isExisting()) {
 				await weekInfoButton.click();
 				await new Promise(resolve => setTimeout(resolve, 3000));
