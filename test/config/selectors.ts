@@ -32,4 +32,17 @@ export class MaccabiSelectors {
 
 	// Generic element patterns
 	static readonly All_Interactive_Elements = `//*[contains(@class, "android.widget.EditText") or contains(@class, "android.widget.Button") or contains(@class, "android.widget.TextView")]`;
+
+	// Swipe actions
+	static readonly SwipeUpAction = {
+		type: "pointer" as const,
+		id: "finger1",
+		parameters: { pointerType: "touch" as const },
+		actions: [
+			{ type: "pointerMove" as const, duration: 0, x: 479, y: 1686, origin: "viewport" as const },
+			{ type: "pointerDown" as const, button: 0 },
+			{ type: "pointerMove" as const, duration: 1000, x: 488, y: 668, origin: "viewport" as const },
+			{ type: "pointerUp" as const, button: 0 }
+		]
+	};
 }

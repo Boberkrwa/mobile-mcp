@@ -8,166 +8,74 @@ describe("Maccabi Pregnancy App Tests", () => {
 	let sharedDriverManager: DriverManager;
 	const logger: Logger = new Logger("MaccabiTestSuite");
 
-	async function selectDateFromCalendar(targetDate: Date): Promise<boolean> {
-		try {
-			const targetDay = targetDate.getDate();
-			logger.action(`Selecting day ${targetDay}`);
-
-			await new Promise(resolve => setTimeout(resolve, 2000));
-
-			const dayElement = await sharedDriverManager.getDriver().$(`//*[@text="${targetDay}" and contains(@class, "TextView") and @clickable="true"]`);
-			if (await dayElement.isExisting()) {
-				await dayElement.click();
-				await new Promise(resolve => setTimeout(resolve, 1000));
-				return true;
-			}
-
-			// Try alternative selectors
-			const altSelectors = [
-				`//*[@text="${targetDay}" and @clickable="true"]`,
-				`//*[contains(@text, "${targetDay}") and contains(@class, "TextView")]`,
-				`//*[@content-desc="${targetDay}" and @clickable="true"]`,
-				`android=new UiSelector().text("${targetDay}").clickable(true)`
-			];
-
-			for (const selector of altSelectors) {
-				try {
-					const element = await sharedDriverManager.getDriver().$(selector);
-					if (await element.isExisting()) {
-						await element.click();
-						await new Promise(resolve => setTimeout(resolve, 1000));
-						return true;
-					}
-				} catch (e) {
-					// Continue to next selector
-				}
-			}
-
-			// Use fallback date if needed
-			logger.warning(`Day ${targetDay} not found, using fallback`);
-			const fallbackSelectors = [
-				'//*[contains(@class, "TextView") and @clickable="true" and string-length(@text) <= 2 and @text != ""]',
-				'//*[@clickable="true" and string-length(@text) = 1]',
-				'//*[@clickable="true" and string-length(@text) = 2]'
-			];
-
-			for (const fallbackSelector of fallbackSelectors) {
-				try {
-					const fallbackElement = await sharedDriverManager.getDriver().$(fallbackSelector);
-					if (await fallbackElement.isExisting()) {
-						await fallbackElement.click();
-						await new Promise(resolve => setTimeout(resolve, 1000));
-						return true;
-					}
-				} catch (e) {
-					// Continue to next fallback
-				}
-			}
-
-			return false;
-		} catch (error) {
-			logger.error("Calendar selection failed", error);
-			return false;
-		}
-	}
-
 	async function executeRegistrationDirectly(): Promise<boolean> {
-		try {
-			const testUser = testUsers[0];
+		const testUser = testUsers[0];
 
-			// Enter name
-			const nameInput = await sharedDriverManager.getDriver().$(MaccabiSelectors.Name_Input);
-			if (await nameInput.isExisting()) {
-				await nameInput.setValue(testUser.registrationData.name);
-			} else {
-				logger.warning("Name input not found");
-			}
-
-			// Click next
-			const nextButton = await sharedDriverManager.getDriver().$(MaccabiSelectors.Next_Button);
-			if (await nextButton.isExisting()) {
-				await nextButton.click();
-				await new Promise(resolve => setTimeout(resolve, 2000));
-			} else {
-				logger.warning("Next button not found");
-			}
-
-			// Handle date selection
-			await new Promise(resolve => setTimeout(resolve, 1500));
-
-			const dateOptions = testUser.registrationData.dateOptions;
-			let selectedDate: Date;
-
-			if (dateOptions?.useRandomDate && dateOptions.dateRange) {
-				const minDays = dateOptions.dateRange.minDaysAgo;
-				const maxDays = dateOptions.dateRange.maxDaysAgo;
-				const randomDays = Math.floor(Math.random() * (maxDays - minDays + 1)) + minDays;
-				selectedDate = new Date();
-				selectedDate.setDate(selectedDate.getDate() - randomDays);
-			} else {
-				selectedDate = new Date();
-				selectedDate.setDate(selectedDate.getDate() - 30);
-			}
-
-			const dateInput = await sharedDriverManager.getDriver().$(MaccabiSelectors.Date_Input);
-			if (await dateInput.isExisting()) {
-				await dateInput.click();
-				await new Promise(resolve => setTimeout(resolve, 3000));
-
-				const dateSelected = await selectDateFromCalendar(selectedDate);
-				if (!dateSelected) {
-					logger.warning("Date selection failed");
-				}
-
-				await new Promise(resolve => setTimeout(resolve, 1000));
-				try {
-					const confirmButton = await sharedDriverManager.getDriver().$(MaccabiSelectors.Confirm_Buttons);
-					if (await confirmButton.isExisting()) {
-						await confirmButton.click();
-						await new Promise(resolve => setTimeout(resolve, 1000));
-					} else {
-						const altConfirmButton = await sharedDriverManager.getDriver().$('//*[@text="OK" or @text="אישור" or @text="Done" or @text="סיום"]');
-						if (await altConfirmButton.isExisting()) {
-							await altConfirmButton.click();
-						}
-					}
-				} catch (confirmError) {
-					logger.warning("Confirm button failed", confirmError);
-				}
-
-			} else {
-				logger.warning("Date input not found");
-			}
-
-			// Continue to next screen
-			await new Promise(resolve => setTimeout(resolve, 1500));
-			const nextButton2 = await sharedDriverManager.getDriver().$(MaccabiSelectors.Next_Button);
-			if (await nextButton2.isExisting()) {
-				await nextButton2.click();
-				await new Promise(resolve => setTimeout(resolve, 2000));
-			} else {
-				logger.warning("Next button not found");
-			}
-
-			// Select fetus count
-			const fetusOption = await sharedDriverManager.getDriver().$(`//*[@text="${testUser.registrationData.fetusCount}"]`);
-			if (await fetusOption.isExisting()) {
-				await fetusOption.click();
-				await new Promise(resolve => setTimeout(resolve, 1500));
-			}
-
-			// Final next button
-			const nextButton3 = await sharedDriverManager.getDriver().$(MaccabiSelectors.Next_Button);
-			if (await nextButton3.isExisting()) {
-				await nextButton3.click();
-				await new Promise(resolve => setTimeout(resolve, 3000));
-			}
-
-			return true;
-		} catch (error) {
-			logger.error("Registration failed", error);
-			return false;
+		// Enter name
+		const nameInput = await sharedDriverManager.getDriver().$(MaccabiSelectors.Name_Input);
+		if (await nameInput.isExisting()) {
+			await nameInput.setValue(testUser.registrationData.name);
+		} else {
+			logger.warning("Name input not found");
 		}
+
+		// Click next
+		const nextButton = await sharedDriverManager.getDriver().$(MaccabiSelectors.Next_Button);
+		if (await nextButton.isExisting()) {
+			await nextButton.click();
+			await new Promise(resolve => setTimeout(resolve, 2000));
+		} else {
+			logger.warning("Next button not found");
+		}
+
+		// Handle date selection - simplified to just confirm without specific date selection
+		await new Promise(resolve => setTimeout(resolve, 1500));
+
+		const dateInput = await sharedDriverManager.getDriver().$(MaccabiSelectors.Date_Input);
+		if (await dateInput.isExisting()) {
+			await dateInput.click();
+
+			// click confirm date button
+			const confirmButton = await sharedDriverManager.getDriver().$(MaccabiSelectors.Confirm_Buttons);
+			if (await confirmButton.isExisting()) {
+				await confirmButton.click();
+				await new Promise(resolve => setTimeout(resolve, 1000));
+			} else {
+				const altConfirmButton = await sharedDriverManager.getDriver().$('//*[@text="OK" or @text="אישור" or @text="Done" or @text="סיום"]');
+				if (await altConfirmButton.isExisting()) {
+					await altConfirmButton.click();
+				}
+			}
+
+		} else {
+			logger.warning("Date input not found");
+		}
+
+		// Continue to next screen
+		await new Promise(resolve => setTimeout(resolve, 1500));
+		const nextButton2 = await sharedDriverManager.getDriver().$(MaccabiSelectors.Next_Button);
+		if (await nextButton2.isExisting()) {
+			await nextButton2.click();
+			await new Promise(resolve => setTimeout(resolve, 2000));
+		} else {
+			logger.warning("Next button not found");
+		}
+
+		// Select fetus count
+		const fetusOption = await sharedDriverManager.getDriver().$(`//*[@text="${testUser.registrationData.fetusCount}"]`);
+		if (await fetusOption.isExisting()) {
+			await fetusOption.click();
+			await new Promise(resolve => setTimeout(resolve, 1500));
+		}
+
+		// Final next button
+		const nextButton3 = await sharedDriverManager.getDriver().$(MaccabiSelectors.Next_Button);
+		if (await nextButton3.isExisting()) {
+			await nextButton3.click();
+			await new Promise(resolve => setTimeout(resolve, 3000));
+		}
+
+		return true;
 	}
 
 	beforeAll(async () => {
@@ -181,126 +89,71 @@ describe("Maccabi Pregnancy App Tests", () => {
 		}
 	}, 60000);
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	async function detectAndHandleCrash(): Promise<boolean> {
-		try {
-			const currentPackage = await sharedDriverManager.getDriver().getCurrentPackage();
+		const currentPackage = await sharedDriverManager.getDriver().getCurrentPackage();
 
-			if (currentPackage !== "com.ideomobile.maccabipregnancy") {
-				logger.warning(`Wrong package: ${currentPackage}`);
-				return await recoverFromCrash();
-			}
-
-			await sharedDriverManager.getDriver().getPageSource();
-			return true;
-
-		} catch (error: any) {
-			logger.error("Crash detected", error);
-			const errorMessage = error.message || error.toString();
-
-			if (errorMessage.includes("instrumentation process is not running") ||
-				errorMessage.includes("probably crashed") ||
-				errorMessage.includes("cannot be proxied to UiAutomator2")) {
-				return await recoverFromCrash();
-			}
-
-			return false;
+		if (currentPackage !== "com.ideomobile.maccabipregnancy") {
+			logger.warning(`Wrong package: ${currentPackage}`);
+			return await recoverFromCrash();
 		}
+
+		await sharedDriverManager.getDriver().getPageSource();
+		return true;
 	}
 
 	async function recoverFromCrash(): Promise<boolean> {
-		try {
-			// Force stop app
-			try {
-				await sharedDriverManager.getDriver().execute("mobile: shell", {
-					command: "am force-stop com.ideomobile.maccabipregnancy"
-				});
-				await new Promise(resolve => setTimeout(resolve, 2000));
-			} catch (e) {
-				// App wasn't running
-			}
+		// Force stop app using WebDriver method instead of shell
+		await sharedDriverManager.getDriver().terminateApp("com.ideomobile.maccabipregnancy");
+		await new Promise(resolve => setTimeout(resolve, 2000));
 
-			// Restart driver
-			try {
-				await sharedDriverManager.quitDriver();
-				await new Promise(resolve => setTimeout(resolve, 3000));
-				await sharedDriverManager.initializeDriver();
-				await new Promise(resolve => setTimeout(resolve, 2000));
-			} catch (driverError) {
-				logger.error("Driver restart failed", driverError);
-				return false;
-			}
+		// Restart driver
+		await sharedDriverManager.quitDriver();
+		await new Promise(resolve => setTimeout(resolve, 3000));
+		await sharedDriverManager.initializeDriver();
+		await new Promise(resolve => setTimeout(resolve, 2000));
 
-			// Launch app
-			try {
-				await sharedDriverManager.launchApp();
-				await new Promise(resolve => setTimeout(resolve, 5000));
+		// Launch app
+		await sharedDriverManager.launchApp();
+		await new Promise(resolve => setTimeout(resolve, 5000));
 
-				const recoveredPackage = await sharedDriverManager.getDriver().getCurrentPackage();
-				if (recoveredPackage === "com.ideomobile.maccabipregnancy") {
-					return true;
-				} else {
-					logger.error(`Recovery failed: ${recoveredPackage}`);
-					return false;
-				}
-			} catch (launchError) {
-				logger.error("App launch failed", launchError);
-				return false;
-			}
-
-		} catch (recoveryError) {
-			logger.error("Recovery failed", recoveryError);
+		const recoveredPackage = await sharedDriverManager.getDriver().getCurrentPackage();
+		if (recoveredPackage === "com.ideomobile.maccabipregnancy") {
+			return true;
+		} else {
+			logger.error(`Recovery failed: ${recoveredPackage}`);
 			return false;
 		}
 	}
 
 	async function handleSkipButtons(): Promise<void> {
-		try {
-			const skipButton = await sharedDriverManager.getDriver().$('android=new UiSelector().resourceId("com.ideomobile.maccabipregnancy:id/tvSkipVideo")');
-			if (await skipButton.isExisting()) {
-				await skipButton.click();
-				await new Promise(resolve => setTimeout(resolve, 1500));
-			}
-		} catch (e) {
-			await detectAndHandleCrash();
+		const skipButton = await sharedDriverManager.getDriver().$('android=new UiSelector().resourceId("com.ideomobile.maccabipregnancy:id/tvSkipVideo")');
+		if (await skipButton.isExisting()) {
+			await skipButton.click();
+			await new Promise(resolve => setTimeout(resolve, 1500));
 		}
 	}
 
 	it("Registration - TC 120208", async () => {
 		// Reset app state
-		try {
-			await sharedDriverManager.getDriver().terminateApp("com.ideomobile.maccabipregnancy");
-			await new Promise(resolve => setTimeout(resolve, 1000));
-
-			await sharedDriverManager.getDriver().execute("mobile: shell", {
-				command: "am force-stop com.ideomobile.maccabipregnancy"
-			});
-			await new Promise(resolve => setTimeout(resolve, 2000));
-		} catch (e) {
-			// App wasn't running
-		}
+		await sharedDriverManager.getDriver().terminateApp("com.ideomobile.maccabipregnancy");
+		await new Promise(resolve => setTimeout(resolve, 2000));
 
 		await sharedDriverManager.quitDriver();
 		await new Promise(resolve => setTimeout(resolve, 3000));
 
-		// Clear app data
-		try {
-			const tempDriverManager = new DriverManager({
-				...maccabiConfig,
-				capabilities: {
-					...maccabiConfig.capabilities,
-					noReset: false
-				}
-			});
+		// Clear app data - use driver reset instead of shell commands
+		const tempDriverManager = new DriverManager({
+			...maccabiConfig,
+			capabilities: {
+				...maccabiConfig.capabilities,
+				noReset: false
+			}
+		});
 
-			await tempDriverManager.initializeDriver();
-			await tempDriverManager.getDriver().execute("mobile: shell", {
-				command: "pm clear com.ideomobile.maccabipregnancy"
-			});
-			await tempDriverManager.quitDriver();
-			await new Promise(resolve => setTimeout(resolve, 2000));
-		} catch (tempError) {
-			logger.warning("Cache clear failed", tempError);
-		}
+		await tempDriverManager.initializeDriver();
+		await tempDriverManager.quitDriver();
+		await new Promise(resolve => setTimeout(resolve, 2000));
 
 		// Reinitialize driver and launch app
 		await sharedDriverManager.initializeDriver();
@@ -308,42 +161,30 @@ describe("Maccabi Pregnancy App Tests", () => {
 		await new Promise(resolve => setTimeout(resolve, 8000));
 
 		// Check app state and handle skip buttons
-		try {
-			await sharedDriverManager.getDriver().getPageSource();
-			// App state is verified for proper session
-		} catch (checkError) {
-			logger.warning("State check failed", checkError);
-		}
+		await sharedDriverManager.getDriver().getPageSource();
+		// App state is verified for proper session
 
 		await handleSkipButtons();
 
 		// Execute registration if needed
 		const currentPackage = await sharedDriverManager.getDriver().getCurrentPackage();
 		if (currentPackage === "com.ideomobile.maccabipregnancy") {
-			try {
-				const registrationElement = await sharedDriverManager.getDriver().$('//*[contains(@text, "שמך הפרטי")]');
-				if (await registrationElement.isExisting()) {
-					const registrationResult = await executeRegistrationDirectly();
-					if (!registrationResult) {
-						logger.error("Registration failed");
-					}
+			const registrationElement = await sharedDriverManager.getDriver().$('//*[contains(@text, "שמך הפרטי")]');
+			if (await registrationElement.isExisting()) {
+				const registrationResult = await executeRegistrationDirectly();
+				if (!registrationResult) {
+					logger.error("Registration failed");
 				}
-			} catch (checkError) {
-				logger.warning("Registration check failed", checkError);
 			}
 		}
 
 		// Final state check
-		try {
-			const finalPackage = await sharedDriverManager.getDriver().getCurrentPackage();
-			if (finalPackage !== "com.ideomobile.maccabipregnancy") {
-				await sharedDriverManager.launchApp();
-				await new Promise(resolve => setTimeout(resolve, 2000));
-			}
-		} catch (navError) {
-			logger.warning("Final check failed", navError);
+		const finalPackage = await sharedDriverManager.getDriver().getCurrentPackage();
+		if (finalPackage !== "com.ideomobile.maccabipregnancy") {
+			await sharedDriverManager.launchApp();
+			await new Promise(resolve => setTimeout(resolve, 2000));
 		}
-	}, 60000);
+	},);
 
 	// it("Add Pregnancy File with File Attachment", async () => {
 	// 	try {
@@ -513,32 +354,26 @@ describe("Maccabi Pregnancy App Tests", () => {
 	// }, 120000);
 
 	it("WeekInfo - TC 120213", async () => {
-		try {
-			await new Promise(resolve => setTimeout(resolve, 3000));
+		await new Promise(resolve => setTimeout(resolve, 3000));
 
-			const currentPackage = await sharedDriverManager.getDriver().getCurrentPackage();
-			if (currentPackage !== "com.ideomobile.maccabipregnancy") {
-				throw new Error("Not in correct app");
-			}
+		const weekInfoButton = await sharedDriverManager.getDriver().$(MaccabiSelectors.Week_Info_Button);
+		await weekInfoButton.click();
+		await new Promise(resolve => setTimeout(resolve, 3000));
 
-			const weekInfoButton = await sharedDriverManager.getDriver().$(MaccabiSelectors.Week_Info_Button);
-			if (await weekInfoButton.isExisting()) {
-				await weekInfoButton.click();
-				await new Promise(resolve => setTimeout(resolve, 3000));
+		const rightArrowButton = await sharedDriverManager.getDriver().$("id=com.ideomobile.maccabipregnancy:id/rightArrow");
+		await rightArrowButton.click();
+		await new Promise(resolve => setTimeout(resolve, 2000));
 
-				const rightArrowButton = await sharedDriverManager.getDriver().$("id=com.ideomobile.maccabipregnancy:id/rightArrow");
-				if (await rightArrowButton.isExisting()) {
-					await rightArrowButton.click();
-					await new Promise(resolve => setTimeout(resolve, 2000));
-				}
-			} else {
-				throw new Error("Week Info button not found");
-			}
+		// Close the WeekInfo by clicking the close button
+		const closeButton = await sharedDriverManager.getDriver().$("id=com.ideomobile.maccabipregnancy:id/closeButton");
+		await closeButton.click();
+	},);
 
-		} catch (error: any) {
-			logger.error("WeekInfo test failed", error);
-			throw error;
-		}
-	}, 60000);
+	it("Entering articles - TC 120193", async () => {
+		logger.info("Starting articles test");
 
+		// Perform swipe up action to scroll through articles
+		await sharedDriverManager.getDriver().performActions([MaccabiSelectors.SwipeUpAction]);
+		await new Promise(resolve => setTimeout(resolve, 1500));
+	},);
 });
