@@ -28,7 +28,7 @@ describe("Maccabi Pregnancy App Tests", () => {
 			logger.warning("Next button not found");
 		}
 
-		// Handle date selection - simplified to just confirm without specific date selection
+		// Handle date selection
 		await new Promise(resolve => setTimeout(resolve, 1500));
 
 		const dateInput = await sharedDriverManager.getDriver().$(MaccabiSelectors.Date_Input);
@@ -88,43 +88,6 @@ describe("Maccabi Pregnancy App Tests", () => {
 			await sharedDriverManager.quitDriver();
 		}
 	}, 60000);
-
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	async function detectAndHandleCrash(): Promise<boolean> {
-		const currentPackage = await sharedDriverManager.getDriver().getCurrentPackage();
-
-		if (currentPackage !== "com.ideomobile.maccabipregnancy") {
-			logger.warning(`Wrong package: ${currentPackage}`);
-			return await recoverFromCrash();
-		}
-
-		await sharedDriverManager.getDriver().getPageSource();
-		return true;
-	}
-
-	async function recoverFromCrash(): Promise<boolean> {
-		// Force stop app using WebDriver method instead of shell
-		await sharedDriverManager.getDriver().terminateApp("com.ideomobile.maccabipregnancy");
-		await new Promise(resolve => setTimeout(resolve, 2000));
-
-		// Restart driver
-		await sharedDriverManager.quitDriver();
-		await new Promise(resolve => setTimeout(resolve, 3000));
-		await sharedDriverManager.initializeDriver();
-		await new Promise(resolve => setTimeout(resolve, 2000));
-
-		// Launch app
-		await sharedDriverManager.launchApp();
-		await new Promise(resolve => setTimeout(resolve, 5000));
-
-		const recoveredPackage = await sharedDriverManager.getDriver().getCurrentPackage();
-		if (recoveredPackage === "com.ideomobile.maccabipregnancy") {
-			return true;
-		} else {
-			logger.error(`Recovery failed: ${recoveredPackage}`);
-			return false;
-		}
-	}
 
 	async function handleSkipButtons(): Promise<void> {
 		const skipButton = await sharedDriverManager.getDriver().$('android=new UiSelector().resourceId("com.ideomobile.maccabipregnancy:id/tvSkipVideo")');
