@@ -1,9 +1,10 @@
 using NUnit.Framework;
 using PregnancyApp.Helpers;
 
+// Important: Keep the namespace as PregnancyApp.Tests so the SetUpFixture
+// applies to the test suite, even though the file lives in Helpers.
 namespace PregnancyApp.Tests
 {
-    // Namespace-level suite setup/teardown moved to dedicated file
     [SetUpFixture]
     public class AppLaunchingSetup
     {
