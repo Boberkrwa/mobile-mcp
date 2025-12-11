@@ -12,14 +12,14 @@ namespace PregnancyApp.Tests
         {
             driverManager = new DriverManager();
             driverManager.InitializeDriver();
-            Console.WriteLine("Maccabi Pregnancy app launched - driver initialized successfully");
+            Console.WriteLine("Maccabi Pregnancy app launched");
         }
 
         [OneTimeTearDown]
         public void TearDown()
         {
             driverManager?.QuitDriver();
-            Console.WriteLine("Driver closed successfully");
+            Console.WriteLine("App closed");
         }
     }
 }
