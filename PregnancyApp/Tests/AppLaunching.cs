@@ -3,9 +3,11 @@ using PregnancyApp.Helpers;
 
 namespace PregnancyApp.Tests
 {
+    // Namespace-level suite setup and teardown in one file
+    [SetUpFixture]
     public class AppLaunching
     {
-        protected DriverManager driverManager = null!;
+        private DriverManager? driverManager;
 
         [OneTimeSetUp]
         public void Setup()
@@ -20,6 +22,17 @@ namespace PregnancyApp.Tests
         {
             driverManager?.QuitDriver();
             Console.WriteLine("App closed");
+            driverManager = null;
+        }
+    }
+
+    // Minimal test to trigger discovery/run
+    public class Smoke
+    {
+        [Test]
+        public void Runs()
+        {
+            Assert.Pass();
         }
     }
 }
