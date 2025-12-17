@@ -7,29 +7,26 @@ namespace PregnancyApp.Helpers
     public class DriverManager
     {
         private AndroidDriver? driver;
+        public static AndroidDriver? SharedDriver { get; private set; }
 
         public AndroidDriver InitializeDriver()
         {
             var appiumOptions = new AppiumOptions();
-
-            // Platform settings
             appiumOptions.PlatformName = AppConfig.PlatformName;
             appiumOptions.AutomationName = AppConfig.AutomationName;
             appiumOptions.DeviceName = AppConfig.DeviceName;
-
-            // App settings
             appiumOptions.AddAdditionalAppiumOption("appPackage", AppConfig.AppPackage);
             appiumOptions.AddAdditionalAppiumOption("appActivity", AppConfig.AppActivity);
-
-            // Additional settings
+            appiumOptions.AddAdditionalAppiumOption("appWaitPackage", AppConfig.AppPackage);
+            appiumOptions.AddAdditionalAppiumOption("appWaitActivity", "*");
             appiumOptions.AddAdditionalAppiumOption("noReset", true);
             appiumOptions.AddAdditionalAppiumOption("fullReset", false);
-
-            // Initialize driver
+            appiumOptions.AddAdditionalAppiumOption("autoGrantPermissions", true);
+            appiumOptions.AddAdditionalAppiumOption("appWaitForLaunch", true);
             driver = new AndroidDriver(new Uri(AppConfig.AppiumServerUrl), appiumOptions,
                 TimeSpan.FromSeconds(AppConfig.CommandTimeout));
 
-            // Set implicit wait
+            SharedDriver = driver;
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(AppConfig.ImplicitWaitTimeout);
 
             return driver;
@@ -41,6 +38,7 @@ namespace PregnancyApp.Helpers
             {
                 driver.Quit();
                 driver = null;
+                SharedDriver = null;
             }
         }
 
@@ -51,6 +49,15 @@ namespace PregnancyApp.Helpers
                 throw new InvalidOperationException("Driver is not initialized. Call InitializeDriver() first.");
             }
             return driver;
+        }
+
+        public static AndroidDriver GetSharedDriver()
+        {
+            if (SharedDriver == null)
+            {
+                throw new InvalidOperationException("Shared driver is not initialized. Ensure OneTimeSetUp has run.");
+            }
+            return SharedDriver;
         }
     }
 }
