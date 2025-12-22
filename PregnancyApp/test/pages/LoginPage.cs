@@ -20,5 +20,12 @@ namespace PregnancyApp.Tests.Pages
 
         public void TapLoginButton() =>
             _driver.FindElement(LoginPageLocators.LoginButton).Click();
+
+        public void Login(string userId, string password)
+        {
+            EnterId(userId);
+            EnterPassword(password);
+            TapLoginButton();
+        }
     }
 }

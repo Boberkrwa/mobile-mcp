@@ -10,6 +10,8 @@ namespace PregnancyApp.Helpers
         public static readonly By FirstLabResult = MobileBy.XPath("//android.widget.TextView[@resource-id=\"com.ideomobile.maccabipregnancy:id/nameOfTestTextView\"]");
 
         public static readonly By UniqueLabTest = MobileBy.XPath("//android.widget.TextView[@resource-id='com.ideomobile.maccabipregnancy:id/tvItemTestName' and @text='Blood Group / Rh']");
+
+        public static readonly By ClForeground = MobileBy.Id("com.ideomobile.maccabipregnancy:id/clForeground");
     }
 
 }
