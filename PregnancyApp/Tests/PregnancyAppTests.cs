@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using NUnit.Framework.Legacy;
 using OpenQA.Selenium.Appium.Android;
-using System;
 using PregnancyApp.Helpers;
 using PregnancyApp.Tests.Pages;
 
@@ -39,9 +38,9 @@ namespace PregnancyApp.Tests
         {
             var homePage = new HomePage(_driver!);
             homePage.NavigateToPersonalMedicalFile();
-            var loginPage = new LoginPage(_driver);
+            var loginPage = new LoginPage(_driver!);
             loginPage.Login(TestData.ValidUserId, TestData.ValidPassword);
-            var medicalFile = new MedicalFile(_driver);
+            var medicalFile = new MedicalFile(_driver!);
             medicalFile.NavigateToLabTest();
             ClassicAssert.IsTrue(medicalFile.IsUniqueLabTestVisible(), "Unique lab test is not visible");
         }
@@ -52,7 +51,7 @@ namespace PregnancyApp.Tests
             ScrollHelper.ScrollToBottom(_driver!, 3);
             var homePage = new HomePage(_driver!);
             homePage.TapYourBagButton();
-            var yourList = new YourList(_driver);
+            var yourList = new YourList(_driver!);
             yourList.MarkFirstIndexIfNeededAndNavigate(homePage);
             ClassicAssert.IsTrue(yourList.IsTitleShowingCount(1), "Your List title does not show (1)");
             yourList.DeleteItem();

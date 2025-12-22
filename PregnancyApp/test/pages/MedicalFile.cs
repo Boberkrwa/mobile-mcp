@@ -3,7 +3,6 @@ using OpenQA.Selenium.Appium.Android;
 using OpenQA.Selenium.Support.UI;
 using PregnancyApp.Helpers;
 using System;
-using System.Linq;
 
 namespace PregnancyApp.Tests.Pages
 {
