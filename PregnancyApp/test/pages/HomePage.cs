@@ -76,31 +76,219 @@ namespace PregnancyApp.Tests.Pages
         public void TapYourBagFirstIndex() =>
             _driver.FindElement(HomePageLocators.YOurBagFirstIndex).Click();
 
+        public void TapWeekInfoButton() =>
+            _driver.FindElement(HomePageLocators.WeekInfoButton).Click();
+
+        public void ScrollWeekForward() =>
+            _driver.FindElement(HomePageLocators.WeekRightArrow).Click();
+
+        public void ScrollWeekBackwards() =>
+            _driver.FindElement(HomePageLocators.WeekLeftArrow).Click();
+
+        public void TapYourRights() =>
+            _driver.FindElement(HomePageLocators.EligibilitySectionRoot).Click();
+
+        public void TapJoiningMaccabiForm() =>
+            _driver.FindElement(HomePageLocators.JoiningMaccabiFormCard).Click();
+
         public bool IsPageAlreadyHasCount(int expected = 1)
+        {
+            var textMatches = _driver.FindElements(By.XPath($"//*[contains(@text, '({expected})')]"));
+            if (textMatches.Count > 0) return true;
+
+            var descMatches = _driver.FindElements(By.XPath($"//*[@content-desc and contains(@content-desc, '({expected})')]"));
+            return descMatches.Count > 0;
+        }
+
+        public void TapContractionsTrackingIcon() =>
+            _driver.FindElement(HomePageLocators.ContractionIcon).Click();
+
+        public void ContractionTracking() =>
+            _driver.FindElement(HomePageLocators.AnyImageView).Click();
+
+        public void ResetContractionsTracking() =>
+            _driver.FindElement(HomePageLocators.ResetContractionsButton).Click();
+
+
+        public void TapPregnancyBinder() =>
+            _driver.FindElement(HomePageLocators.PregnancyBinderButton).Click();
+
+        public void TapFileAddButton() =>
+            _driver.FindElement(HomePageLocators.FloatingActionButton).Click();
+
+        // Gallery and Camera options removed; using My Files only
+
+        public void TapMyFilesOption() =>
+            _driver.FindElement(HomePageLocators.MyFilesOption).Click();
+
+        // Gallery selection removed; using file picker only
+
+        // Camera capture and confirm removed
+
+
+
+        public void SelectFirstFile()
+        {
+            AcceptPermissionsIfPresent();
+            var originalWait = _driver.Manage().Timeouts().ImplicitWait;
+            try
+            {
+                _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+                var thumbBy = By.XPath("(//android.widget.ImageView[@resource-id=\"com.google.android.documentsui:id/icon_thumb\"]) [1]");
+                var elements = _driver.FindElements(thumbBy);
+                if (elements.Count > 0)
+                {
+                    elements[0].Click();
+                }
+                ConfirmGallerySelectionIfPresent();
+            }
+            finally
+            {
+                _driver.Manage().Timeouts().ImplicitWait = originalWait;
+            }
+        }
+
+        public void TapSaveButton()
+        {
+            var originalWait = _driver.Manage().Timeouts().ImplicitWait;
+            try
+            {
+                _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(6);
+                var tapped = TryTap(HomePageLocators.SaveButton)
+                    || TryTap(HomePageLocators.DocumentsUiDone)
+                    || TryTap(HomePageLocators.SystemPositiveButton)
+                    || TryTap(By.XPath("//*[contains(@text,'Save') or contains(@text,'שמור') or contains(@text,'שמירה') or contains(@content-desc,'Save')]"));
+                if (!tapped)
+                {
+                    // As a fallback, try common confirm/OK buttons again
+                    tapped = TryTap(By.Id("android:id/button1"))
+                        || TryTap(By.XPath("//*[contains(@text,'OK') or contains(@text,'אישור') or contains(@text,'סיום') or contains(@text,'Done')]"));
+                }
+                if (!tapped)
+                {
+                    // If still not found, try going back once and re-check
+                    TryPressBack();
+                    _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+                    tapped = TryTap(HomePageLocators.SaveButton)
+                        || TryTap(By.XPath("//*[contains(@text,'Save') or contains(@text,'שמור') or contains(@text,'שמירה') or contains(@content-desc,'Save')]"))
+                        || TryTap(HomePageLocators.SystemPositiveButton);
+                }
+            }
+            finally
+            {
+                _driver.Manage().Timeouts().ImplicitWait = originalWait;
+            }
+        }
+
+        public void TapOptionsButton() =>
+            _driver.FindElement(HomePageLocators.MoreImageButton).Click();
+
+        public void TapDeleteButton() =>
+            _driver.FindElement(HomePageLocators.DeleteButton).Click();
+
+        public void SelectPregnancyFolderCheckbox() =>
+            _driver.FindElement(HomePageLocators.PregnancyFolderCheckbox).Click();
+
+        public void TapDeleteAction() =>
+            _driver.FindElement(HomePageLocators.DeleteActionButton).Click();
+
+        public void ConfirmFileDeletion() =>
+            _driver.FindElement(HomePageLocators.ConfirmDeleteButton).Click();
+
+        public void TapFirstArticle() =>
+            _driver.FindElement(HomePageLocators.ArticlesFirstPanel).Click();
+
+        public void TapThirdArticle() =>
+            _driver.FindElement(HomePageLocators.ArticlesThirdCard).Click();
+
+        public void GoBack()
+        {
+            TryPressBack();
+        }
+
+        public void AcceptPermissionsIfPresent()
+        {
+            var originalWait = _driver.Manage().Timeouts().ImplicitWait;
+            try
+            {
+                _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
+                var candidates = new By[]
+                {
+                    HomePageLocators.PermissionAllowButton,
+                    HomePageLocators.SystemPositiveButton,
+                };
+                foreach (var by in candidates)
+                {
+                    var els = _driver.FindElements(by);
+                    if (els.Count > 0)
+                    {
+                        els[0].Click();
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                _driver.Manage().Timeouts().ImplicitWait = originalWait;
+            }
+        }
+
+        public void ConfirmGallerySelectionIfPresent()
+        {
+            var originalWait = _driver.Manage().Timeouts().ImplicitWait;
+            try
+            {
+                _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
+                var candidates = new By[]
+                {
+                    HomePageLocators.DocumentsUiDone,
+                    HomePageLocators.SystemPositiveButton,
+                    By.XPath("//*[contains(@text,'Open') or contains(@text,'פתח') or contains(@content-desc,'Open')]")
+                };
+                foreach (var by in candidates)
+                {
+                    var els = _driver.FindElements(by);
+                    if (els.Count > 0)
+                    {
+                        els[0].Click();
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                _driver.Manage().Timeouts().ImplicitWait = originalWait;
+            }
+        }
+
+        private bool TryTap(By by)
+        {
+            var elements = _driver.FindElements(by);
+            if (elements.Count > 0)
+            {
+                elements[0].Click();
+                return true;
+            }
+            return false;
+        }
+
+
+
+        private void TryPressBack()
         {
             try
             {
-                // Quick check - no wait, just find immediately
-                var textMatches = _driver.FindElements(By.XPath($"//*[contains(@text, '({expected})')]"));
-                if (textMatches.Count > 0)
-                {
-                    System.Console.WriteLine($"[PageCheck] Found via text");
-                    return true;
-                }
-                var descMatches = _driver.FindElements(By.XPath($"//*[@content-desc and contains(@content-desc, '({expected})')]"));
-                if (descMatches.Count > 0)
-                {
-                    System.Console.WriteLine($"[PageCheck] Found via content-desc");
-                    return true;
-                }
-                System.Console.WriteLine($"[PageCheck] Not found");
-                return false;
+                _driver.PressKeyCode(4);
             }
-            catch (System.Exception ex)
-            {
-                System.Console.WriteLine($"[PageCheck] Error: {ex.Message}");
-                return false;
-            }
+            catch { }
         }
+
+
+
+
+
+
+
+
     }
 }

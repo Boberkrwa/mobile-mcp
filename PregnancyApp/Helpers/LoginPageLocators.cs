@@ -7,5 +7,6 @@ namespace PregnancyApp.Helpers
         public static readonly By IdInput = By.Id("com.ideomobile.maccabipregnancy:id/textInputEditText");
         public static readonly By PasswordInput = By.Id("com.ideomobile.maccabipregnancy:id/textInputEditTextPassword");
         public static readonly By LoginButton = By.Id("com.ideomobile.maccabipregnancy:id/enterButton");
+        public static readonly By ErrorPopupConfirmButton = By.Id("com.ideomobile.maccabipregnancy:id/btn_positive");
     }
 }

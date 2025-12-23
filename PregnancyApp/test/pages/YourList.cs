@@ -17,10 +17,7 @@ namespace PregnancyApp.Tests.Pages
 
         public void MarkFirstIndexIfNeededAndNavigate(HomePage homePage)
         {
-            // If page already shows a count (1), skip marking first index
-            var pageAlreadyHasOne = homePage.IsPageAlreadyHasCount(1);
-            System.Console.WriteLine($"[YourList] Page already has (1)={pageAlreadyHasOne}");
-            if (!pageAlreadyHasOne)
+            if (!homePage.IsPageAlreadyHasCount(1))
             {
                 homePage.TapYourBagFirstIndex();
             }
@@ -34,7 +31,6 @@ namespace PregnancyApp.Tests.Pages
         {
             try
             {
-                // Quick check - no wait, just find immediately
                 var textMatches = _driver.FindElements(By.XPath($"//*[contains(@text, '({expected})')]"));
                 if (textMatches.Count > 0)
                 {

@@ -27,5 +27,8 @@ namespace PregnancyApp.Tests.Pages
             EnterPassword(password);
             TapLoginButton();
         }
+
+        public void CloseErrorPopup() =>
+            _driver.FindElement(LoginPageLocators.ErrorPopupConfirmButton).Click();
     }
 }
