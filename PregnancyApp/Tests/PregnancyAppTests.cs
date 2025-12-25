@@ -39,7 +39,7 @@ namespace PregnancyApp.Tests
 
         #region Authentication Tests
 
-        [Test]
+        [Test, Order(1)]
         public void LogInAndEnterLabTest()
         {
             var homePage = new HomePage(_driver!);
@@ -51,7 +51,7 @@ namespace PregnancyApp.Tests
             ClassicAssert.IsTrue(medicalFile.IsUniqueLabTestVisible(), "Unique lab test is not visible");
         }
 
-        [Test]
+        [Test, Order(2)]
         public void FailedLogin()
         {
             var homePage = new HomePage(_driver!);
@@ -67,7 +67,7 @@ namespace PregnancyApp.Tests
 
         #region Personal Area Tests
 
-        [Test]
+        [Test, Order(3)]
         public void TrackingFetusMovement()
         {
             var homePage = new HomePage(_driver!);
@@ -75,7 +75,7 @@ namespace PregnancyApp.Tests
             homePage.TrackFetusMovement(4);
         }
 
-        [Test]
+        [Test, Order(4)]
         public void TrackingContractions()
         {
             var homePage = new HomePage(_driver!);
@@ -86,7 +86,7 @@ namespace PregnancyApp.Tests
             homePage.ResetContractionsTracking();
         }
 
-        [Test]
+        [Test, Order(5)]
         public void UploadImageToPregnancyBinder()
         {
             var homePage = new HomePage(_driver!);
@@ -107,7 +107,7 @@ namespace PregnancyApp.Tests
 
         #region Home Page Navigation Tests
 
-        [Test]
+        [Test, Order(6)]
         public void CheckingWeekInfo()
         {
             var homePage = new HomePage(_driver!);
@@ -120,7 +120,7 @@ namespace PregnancyApp.Tests
             ClassicAssert.AreNotEqual(beforeScroll, afterScroll, "Scroll did not change the view");
         }
 
-        [Test]
+        [Test, Order(7)]
         public void EnteringArticles()
         {
             var homePage = new HomePage(_driver!);
@@ -132,7 +132,7 @@ namespace PregnancyApp.Tests
             ScrollHelper.ScrollToBottom(_driver!, 1);
         }
 
-        [Test]
+        [Test, Order(8)]
         public void EnteringJoiningMaccabiForm()
         {
             var homePage = new HomePage(_driver!);
@@ -146,7 +146,7 @@ namespace PregnancyApp.Tests
 
         #region Labor Preparation Tests
 
-        [Test]
+        [Test, Order(9)]
         public void AddAndRemoveItemForLabor()
         {
             ScrollHelper.ScrollToBottom(_driver!, 4);
