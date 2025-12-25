@@ -10,10 +10,19 @@ namespace PregnancyApp.Tests.Pages
     {
         private readonly AndroidDriver _driver;
 
+        #region Constructor
+
         public YourList(AndroidDriver driver)
         {
             _driver = driver;
         }
+
+        #endregion
+
+        #region Navigation
+
+        public void TapYourList() =>
+            _driver.FindElement(HomePageLocators.YourList).Click();
 
         public void MarkFirstIndexIfNeededAndNavigate(HomePage homePage)
         {
@@ -24,8 +33,33 @@ namespace PregnancyApp.Tests.Pages
             TapYourList();
         }
 
-        public void TapYourList() =>
-            _driver.FindElement(HomePageLocators.YourList).Click();
+        #endregion
+
+        #region Item Management
+
+        public void TapOptionsButton() =>
+            _driver.FindElement(YourListLocators.YourListOptionsButton).Click();
+
+        public void TapDeleteButton() =>
+            _driver.FindElement(YourListLocators.YourListDeleteButton).Click();
+
+        public void CheckDeleteItemCheckbox() =>
+            _driver.FindElement(YourListLocators.DeleteItemCheckbox).Click();
+
+        public void ConfirmDelete() =>
+            _driver.FindElement(YourListLocators.ConfirmDeleteButton).Click();
+
+        public void DeleteItem()
+        {
+            TapOptionsButton();
+            TapDeleteButton();
+            CheckDeleteItemCheckbox();
+            ConfirmDelete();
+        }
+
+        #endregion
+
+        #region Validations
 
         public bool IsTitleShowingCount(int expected = 1)
         {
@@ -53,24 +87,6 @@ namespace PregnancyApp.Tests.Pages
             }
         }
 
-        public void TapOptionsButton() =>
-            _driver.FindElement(YourListLocators.YourListOptionsButton).Click();
-
-        public void TapDeleteButton() =>
-            _driver.FindElement(YourListLocators.YourListDeleteButton).Click();
-
-        public void CheckDeleteItemCheckbox() =>
-            _driver.FindElement(YourListLocators.DeleteItemCheckbox).Click();
-
-        public void ConfirmDelete() =>
-            _driver.FindElement(YourListLocators.ConfirmDeleteButton).Click();
-
-        public void DeleteItem()
-        {
-            TapOptionsButton();
-            TapDeleteButton();
-            CheckDeleteItemCheckbox();
-            ConfirmDelete();
-        }
+        #endregion
     }
 }

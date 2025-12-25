@@ -10,6 +10,8 @@ namespace PregnancyApp.Tests
     {
         private AndroidDriver? _driver;
 
+        #region Setup and Teardown
+
         [SetUp]
         public void SetUp()
         {
@@ -33,6 +35,10 @@ namespace PregnancyApp.Tests
             }
         }
 
+        #endregion
+
+        #region Authentication Tests
+
         [Test]
         public void LogInAndEnterLabTest()
         {
@@ -46,62 +52,6 @@ namespace PregnancyApp.Tests
         }
 
         [Test]
-        public void AddAndRemoveItemForLabor()
-        {
-            ScrollHelper.ScrollToBottom(_driver!, 4);
-            var homePage = new HomePage(_driver!);
-            homePage.TapYourBagButton();
-            var yourList = new YourList(_driver!);
-            yourList.MarkFirstIndexIfNeededAndNavigate(homePage);
-            ClassicAssert.IsTrue(yourList.IsTitleShowingCount(1), "Your List title does not show (1)");
-            yourList.DeleteItem();
-            ClassicAssert.IsFalse(yourList.IsTitleShowingCount(1), "Your List title still shows (1) after deletion");
-        }
-
-        [Test]
-        public void TrackingFetusMovement()
-        {
-            var homePage = new HomePage(_driver!);
-            homePage.TapPersonalArea();
-            homePage.TrackFetusMovement(4);
-        }
-
-        [Test]
-        public void CheckingWeekInfo()
-        {
-            var homePage = new HomePage(_driver!);
-            homePage.TapWeekInfoButton();
-            homePage.ScrollWeekForward();
-            homePage.ScrollWeekBackwards();
-            var beforeScroll = _driver!.PageSource;
-            ScrollHelper.ScrollToBottom(_driver!, 1);
-            var afterScroll = _driver!.PageSource;
-            ClassicAssert.AreNotEqual(beforeScroll, afterScroll, "Scroll did not change the view");
-        }
-
-        [Test]
-        public void EnteringJoiningMaccabiForm()
-        {
-            var homePage = new HomePage(_driver!);
-            homePage.TapYourRights();
-            homePage.TapJoiningMaccabiForm();
-            var pageSource = _driver!.PageSource;
-            ClassicAssert.IsTrue(pageSource.Contains(PageElements.JoiningMaccabiFormId) || pageSource.Length > 0, "Not on the joining Maccabi form page");
-        }
-
-        [Test]
-        public void EnteringArticles()
-        {
-            var homePage = new HomePage(_driver!);
-            homePage.TapFirstArticle();
-            ScrollHelper.ScrollToBottom(_driver!, 2);
-            homePage.GoBack();
-            ScrollHelper.ScrollToBottom(_driver!, 3);
-            homePage.TapThirdArticle();
-            ScrollHelper.ScrollToBottom(_driver!, 1);
-        }
-
-        [Test]
         public void FailedLogin()
         {
             var homePage = new HomePage(_driver!);
@@ -111,6 +61,18 @@ namespace PregnancyApp.Tests
             loginPage.EnterPassword(TestData.InvalidPassword);
             loginPage.TapLoginButton();
             loginPage.CloseErrorPopup();
+        }
+
+        #endregion
+
+        #region Personal Area Tests
+
+        [Test]
+        public void TrackingFetusMovement()
+        {
+            var homePage = new HomePage(_driver!);
+            homePage.TapPersonalArea();
+            homePage.TrackFetusMovement(4);
         }
 
         [Test]
@@ -140,5 +102,63 @@ namespace PregnancyApp.Tests
             homePage.TapDeleteAction();
             homePage.ConfirmFileDeletion();
         }
+
+        #endregion
+
+        #region Home Page Navigation Tests
+
+        [Test]
+        public void CheckingWeekInfo()
+        {
+            var homePage = new HomePage(_driver!);
+            homePage.TapWeekInfoButton();
+            homePage.ScrollWeekForward();
+            homePage.ScrollWeekBackwards();
+            var beforeScroll = _driver!.PageSource;
+            ScrollHelper.ScrollToBottom(_driver!, 1);
+            var afterScroll = _driver!.PageSource;
+            ClassicAssert.AreNotEqual(beforeScroll, afterScroll, "Scroll did not change the view");
+        }
+
+        [Test]
+        public void EnteringArticles()
+        {
+            var homePage = new HomePage(_driver!);
+            homePage.TapFirstArticle();
+            ScrollHelper.ScrollToBottom(_driver!, 2);
+            homePage.GoBack();
+            ScrollHelper.ScrollToBottom(_driver!, 3);
+            homePage.TapThirdArticle();
+            ScrollHelper.ScrollToBottom(_driver!, 1);
+        }
+
+        [Test]
+        public void EnteringJoiningMaccabiForm()
+        {
+            var homePage = new HomePage(_driver!);
+            homePage.TapYourRights();
+            homePage.TapJoiningMaccabiForm();
+            var pageSource = _driver!.PageSource;
+            ClassicAssert.IsTrue(pageSource.Contains(PageElements.JoiningMaccabiFormId) || pageSource.Length > 0, "Not on the joining Maccabi form page");
+        }
+
+        #endregion
+
+        #region Labor Preparation Tests
+
+        [Test]
+        public void AddAndRemoveItemForLabor()
+        {
+            ScrollHelper.ScrollToBottom(_driver!, 4);
+            var homePage = new HomePage(_driver!);
+            homePage.TapYourBagButton();
+            var yourList = new YourList(_driver!);
+            yourList.MarkFirstIndexIfNeededAndNavigate(homePage);
+            ClassicAssert.IsTrue(yourList.IsTitleShowingCount(1), "Your List title does not show (1)");
+            yourList.DeleteItem();
+            ClassicAssert.IsFalse(yourList.IsTitleShowingCount(1), "Your List title still shows (1) after deletion");
+        }
+
+        #endregion
     }
 }

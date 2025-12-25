@@ -9,10 +9,16 @@ namespace PregnancyApp.Tests.Pages
     {
         private readonly AndroidDriver _driver;
 
+        #region Constructor
+
         public HomePage(AndroidDriver driver)
         {
             _driver = driver;
         }
+
+        #endregion
+
+        #region Navigation
 
         public void TapPersonalArea()
         {
@@ -27,6 +33,15 @@ namespace PregnancyApp.Tests.Pages
             TapPersonalArea();
             TapPersonalMedicalFile();
         }
+
+        public void GoBack()
+        {
+            TryPressBack();
+        }
+
+        #endregion
+
+        #region Fetus Movement Tracking
 
         public void FetusMovementButton() =>
             _driver.FindElement(HomePageLocators.FetusMovementButton).Click();
@@ -70,35 +85,10 @@ namespace PregnancyApp.Tests.Pages
             }
             FinishTrackingButton();
         }
-        public void TapYourBagButton() =>
-            _driver.FindElement(HomePageLocators.YourBagButton).Click();
 
-        public void TapYourBagFirstIndex() =>
-            _driver.FindElement(HomePageLocators.YOurBagFirstIndex).Click();
+        #endregion
 
-        public void TapWeekInfoButton() =>
-            _driver.FindElement(HomePageLocators.WeekInfoButton).Click();
-
-        public void ScrollWeekForward() =>
-            _driver.FindElement(HomePageLocators.WeekRightArrow).Click();
-
-        public void ScrollWeekBackwards() =>
-            _driver.FindElement(HomePageLocators.WeekLeftArrow).Click();
-
-        public void TapYourRights() =>
-            _driver.FindElement(HomePageLocators.EligibilitySectionRoot).Click();
-
-        public void TapJoiningMaccabiForm() =>
-            _driver.FindElement(HomePageLocators.JoiningMaccabiFormCard).Click();
-
-        public bool IsPageAlreadyHasCount(int expected = 1)
-        {
-            var textMatches = _driver.FindElements(By.XPath($"//*[contains(@text, '({expected})')]"));
-            if (textMatches.Count > 0) return true;
-
-            var descMatches = _driver.FindElements(By.XPath($"//*[@content-desc and contains(@content-desc, '({expected})')]"));
-            return descMatches.Count > 0;
-        }
+        #region Contractions Tracking
 
         public void TapContractionsTrackingIcon() =>
             _driver.FindElement(HomePageLocators.ContractionIcon).Click();
@@ -109,6 +99,61 @@ namespace PregnancyApp.Tests.Pages
         public void ResetContractionsTracking() =>
             _driver.FindElement(HomePageLocators.ResetContractionsButton).Click();
 
+        #endregion
+
+        #region Labor Bag / Your List
+        public void TapYourBagButton() =>
+            _driver.FindElement(HomePageLocators.YourBagButton).Click();
+
+        public void TapYourBagFirstIndex() =>
+            _driver.FindElement(HomePageLocators.YOurBagFirstIndex).Click();
+
+        public bool IsPageAlreadyHasCount(int expected = 1)
+        {
+            var textMatches = _driver.FindElements(By.XPath($"//*[contains(@text, '({expected})')]"));
+            if (textMatches.Count > 0) return true;
+
+            var descMatches = _driver.FindElements(By.XPath($"//*[@content-desc and contains(@content-desc, '({expected})')]"));
+            return descMatches.Count > 0;
+        }
+
+        #endregion
+
+        #region Week Information
+
+        public void TapWeekInfoButton() =>
+            _driver.FindElement(HomePageLocators.WeekInfoButton).Click();
+
+        public void ScrollWeekForward() =>
+            _driver.FindElement(HomePageLocators.WeekRightArrow).Click();
+
+        public void ScrollWeekBackwards() =>
+            _driver.FindElement(HomePageLocators.WeekLeftArrow).Click();
+
+        #endregion
+
+        #region Rights and Forms
+
+        public void TapYourRights() =>
+            _driver.FindElement(HomePageLocators.EligibilitySectionRoot).Click();
+
+        public void TapJoiningMaccabiForm() =>
+            _driver.FindElement(HomePageLocators.JoiningMaccabiFormCard).Click();
+
+        #endregion
+
+        #region Articles
+
+        public void TapFirstArticle() =>
+            _driver.FindElement(HomePageLocators.ArticlesFirstPanel).Click();
+
+        public void TapThirdArticle() =>
+            _driver.FindElement(HomePageLocators.ArticlesThirdCard).Click();
+
+        #endregion
+
+        #region Pregnancy Binder
+
 
         public void TapPregnancyBinder() =>
             _driver.FindElement(HomePageLocators.PregnancyBinderButton).Click();
@@ -116,16 +161,8 @@ namespace PregnancyApp.Tests.Pages
         public void TapFileAddButton() =>
             _driver.FindElement(HomePageLocators.FloatingActionButton).Click();
 
-        // Gallery and Camera options removed; using My Files only
-
         public void TapMyFilesOption() =>
             _driver.FindElement(HomePageLocators.MyFilesOption).Click();
-
-        // Gallery selection removed; using file picker only
-
-        // Camera capture and confirm removed
-
-
 
         public void SelectFirstFile()
         {
@@ -195,16 +232,9 @@ namespace PregnancyApp.Tests.Pages
         public void ConfirmFileDeletion() =>
             _driver.FindElement(HomePageLocators.ConfirmDeleteButton).Click();
 
-        public void TapFirstArticle() =>
-            _driver.FindElement(HomePageLocators.ArticlesFirstPanel).Click();
+        #endregion
 
-        public void TapThirdArticle() =>
-            _driver.FindElement(HomePageLocators.ArticlesThirdCard).Click();
-
-        public void GoBack()
-        {
-            TryPressBack();
-        }
+        #region Helper Methods
 
         public void AcceptPermissionsIfPresent()
         {
@@ -283,12 +313,6 @@ namespace PregnancyApp.Tests.Pages
             catch { }
         }
 
-
-
-
-
-
-
-
+        #endregion
     }
 }
