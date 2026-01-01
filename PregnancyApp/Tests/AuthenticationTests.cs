@@ -33,8 +33,8 @@ namespace PregnancyApp.Tests
             }
         }
 
-        [Test(Description = "Test Case: 118836, 118864, 120191, 118845"), Order(1)]
-        public void LogInAndEnterTests()
+        [Test(Description = "Test Case: 118836, 118864, 120191"), Order(1)]
+        public void EnteringLabTest()
         {
             var homePage = new HomePage(_driver!);
             homePage.NavigateToLoginPage();
@@ -43,13 +43,34 @@ namespace PregnancyApp.Tests
             var medicalFile = new MedicalFile(_driver!);
             medicalFile.NavigateToLabTest();
             ClassicAssert.IsTrue(medicalFile.IsUniqueLabTestVisible(), "Unique lab test is not visible");
-            homePage.GoBack(2);
+
+        }
+
+        [Test(Description = "Test Case: 118845"), Order(12)]
+        public void IsUrineTestHiddenForNonPilotUser()
+        {
+            var homePage = new HomePage(_driver!);
+            homePage.NavigateToLoginPage();
+            var loginPage = new LoginPage(_driver!);
+            loginPage.Login(TestData.ValidUserId, TestData.ValidPassword);
+            var medicalFile = new MedicalFile(_driver!);
             medicalFile.CheckIfUrineTestButtonIsVisible();
+
+        }
+
+
+        [Test(Description = "Test Case: 116107"), Order(12)]
+        public void NoResultsScreens()
+        {
+            var homePage = new HomePage(_driver!);
+            homePage.NavigateToLoginPage();
+            var loginPage = new LoginPage(_driver!);
+            loginPage.Login(TestData.ValidUserId, TestData.ValidPassword);
+            var medicalFile = new MedicalFile(_driver!);
             medicalFile.ClickUltraSoundTestsTab();
             Assert.That(medicalFile.IsBiochemichalContainerEmpty(), Is.True, "RecyclerContainer is empty");
 
         }
-
         [Test, Order(2)]
         public void FailedLogin()
         {

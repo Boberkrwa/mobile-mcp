@@ -69,6 +69,9 @@ namespace PregnancyApp.Tests.Pages
         public void ClickYourBagButton() =>
             _driver.FindElement(HomePageLocators.YourBagButton).Click();
 
+        public void ClickYourFileButton() =>
+            _driver.FindElement(HomePageLocators.YourFileButton).Click();
+
         public void ClickWeekInfoButton() =>
             _driver.FindElement(HomePageLocators.WeekInfoButton).Click();
 
