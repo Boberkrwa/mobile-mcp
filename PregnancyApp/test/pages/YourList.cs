@@ -15,18 +15,6 @@ namespace PregnancyApp.Tests.Pages
             _driver = driver;
         }
 
-        public void ClickYourList() =>
-            _driver.FindElement(HomePageLocators.YourList).Click();
-
-        public void MarkFirstIndexIfNeededAndNavigate(HomePage homePage)
-        {
-            if (!homePage.IsPageAlreadyHasCount(1))
-            {
-                homePage.ClickYourBagFirstIndex();
-            }
-            ClickYourList();
-        }
-
         public void ClickOptionsButton() =>
             _driver.FindElement(YourListLocators.YourListOptionsButton).Click();
 
@@ -45,6 +33,31 @@ namespace PregnancyApp.Tests.Pages
             ClickDeleteButton();
             CheckDeleteItemCheckbox();
             ConfirmDelete();
+        }
+
+        public void MarkFirstIndexIfNeededAndNavigate(HomePage homePage)
+        {
+            try
+            {
+                var firstIndex = _driver.FindElement(HomePageLocators.YourBagFirstIndex);
+
+                // Check multiple attributes that might indicate marked/selected state
+                var isChecked = firstIndex.GetAttribute("checked");
+                var isSelected = firstIndex.GetAttribute("selected");
+                var isFocused = firstIndex.GetAttribute("focused");
+
+                // Only click if none of the attributes indicate it's already marked
+                if (isChecked != "true" && isSelected != "true" && isFocused != "true")
+                {
+                    homePage.ClickYourFileFirstIndex();
+                }
+            }
+            catch
+            {
+                // If element not found, do nothing - we can't mark it
+            }
+
+            _driver.FindElement(YourListLocators.MyListTitle).Click();
         }
 
         public bool IsTitleShowingCount(int expected = 1)

@@ -36,7 +36,7 @@ namespace PregnancyApp.Tests
         [Test(Description = "Test Case: 120215"), Order(9)]
         public void AddAndRemoveItemForLabor()
         {
-            ScrollHelper.ScrollToBottom(_driver!, 4);
+            ScrollHelper.ScrollAction(_driver!, 4);
             var homePage = new HomePage(_driver!);
             homePage.ClickYourBagButton();
             var yourList = new YourList(_driver!);

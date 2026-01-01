@@ -1,5 +1,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Android;
+using OpenQA.Selenium.Support.UI;
 using PregnancyApp.Helpers;
 using System;
 using System.Collections.Generic;
@@ -22,72 +23,8 @@ namespace PregnancyApp.Tests.Pages
 
         public void StartFetusMovement()
         {
-            var possibleCounts = new int[] { 1, 2, 3 };
-
-            // Picker exists
-            var picker = _driver.FindElement(By.Id("com.ideomobile.maccabipregnancy:id/numberPickerView"));
-
-            // Detect current value (primary: EditText inside picker)
-            int currentCount = -1;
-            try
-            {
-                var edit = picker.FindElements(By.XPath(".//android.widget.EditText")).FirstOrDefault();
-                if (edit != null && int.TryParse(edit.Text, out var val)) currentCount = val;
-            }
-            catch { }
-
-            if (currentCount == -1)
-            {
-                // Secondary: detect selected attribute on child TextViews
-                foreach (var c in possibleCounts)
-                {
-                    var el = picker.FindElements(By.XPath($".//android.widget.TextView[@content-desc='{c}']")).FirstOrDefault();
-                    if (el != null)
-                    {
-                        var sel = (el.GetAttribute("selected") ?? el.GetAttribute("checked") ?? el.GetAttribute("focused") ?? string.Empty).ToLower();
-                        if (sel.Contains("true"))
-                        {
-                            currentCount = c;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (currentCount == -1) currentCount = possibleCounts[0];
-
-            var alternatives = possibleCounts.Where(c => c != currentCount).ToArray();
-            var rnd = new Random();
-            var choice = alternatives[rnd.Next(alternatives.Length)];
-
-            TestContext.Progress.WriteLine($"[SelectDifferentFetusCount] current={currentCount}, choice={choice}");
-
-            // Click the chosen option inside the picker (or globally as fallback)
-            var target = picker.FindElements(By.XPath($".//android.widget.TextView[@content-desc='{choice}']")).FirstOrDefault()
-                         ?? _driver.FindElements(By.XPath($"//android.widget.TextView[@content-desc='{choice}']")).FirstOrDefault();
-            if (target != null)
-            {
-                target.Click();
-                System.Threading.Thread.Sleep(300);
-            }
-
-            // Verify new value
-            try
-            {
-                var editAfter = picker.FindElements(By.XPath(".//android.widget.EditText")).FirstOrDefault();
-                if (editAfter != null)
-                {
-                    TestContext.Progress.WriteLine($"[SelectDifferentFetusCount] after={editAfter.Text}");
-                }
-                else
-                {
-                    TestContext.Progress.WriteLine("[SelectDifferentFetusCount] after=unknown (no EditText)");
-                }
-            }
-            catch (Exception ex)
-            {
-                TestContext.Progress.WriteLine($"[SelectDifferentFetusCount] verify error: {ex.Message}");
-            }
+            _driver.FindElement(HomePageLocators.StartFetusMovement).Click();
+            System.Threading.Thread.Sleep(500);
         }
 
         public void FinishTrackingButton() =>
@@ -96,10 +33,24 @@ namespace PregnancyApp.Tests.Pages
         public void TrackFetusMovement(int count = 3)
         {
             FetusMovementButton();
+            StartFetusMovement();
+            Thread.Sleep(1000);
+
+            // Tap on the center of the screen to register movements
+            var size = _driver.Manage().Window.Size;
+            int centerX = size.Width / 2;
+            int centerY = size.Height / 2;
+
             for (int i = 0; i < count; i++)
             {
-                StartFetusMovement();
+                _driver.ExecuteScript("mobile: clickGesture", new Dictionary<string, object>
+                {
+                    { "x", centerX },
+                    { "y", centerY }
+                });
+                Thread.Sleep(1000);
             }
+
             FinishTrackingButton();
         }
 
@@ -112,20 +63,11 @@ namespace PregnancyApp.Tests.Pages
         public void ResetContractionsTracking() =>
             _driver.FindElement(HomePageLocators.ResetContractionsButton).Click();
 
+        public void ClickYourFileFirstIndex() =>
+            _driver.FindElement(HomePageLocators.YourBagFirstIndex).Click();
+
         public void ClickYourBagButton() =>
             _driver.FindElement(HomePageLocators.YourBagButton).Click();
-
-        public void ClickYourBagFirstIndex() =>
-            _driver.FindElement(HomePageLocators.YOurBagFirstIndex).Click();
-
-        public bool IsPageAlreadyHasCount(int expected = 1)
-        {
-            var textMatches = _driver.FindElements(By.XPath($"//*[contains(@text, '({expected})')]"));
-            if (textMatches.Count > 0) return true;
-
-            var descMatches = _driver.FindElements(By.XPath($"//*[@content-desc and contains(@content-desc, '({expected})')]"));
-            return descMatches.Count > 0;
-        }
 
         public void ClickWeekInfoButton() =>
             _driver.FindElement(HomePageLocators.WeekInfoButton).Click();
@@ -137,7 +79,7 @@ namespace PregnancyApp.Tests.Pages
             _driver.FindElement(HomePageLocators.WeekLeftArrow).Click();
 
         public void ClickYourRights() =>
-            _driver.FindElement(HomePageLocators.EligibilitySectionRoot).Click();
+            _driver.FindElement(HomePageLocators.YourRights).Click();
 
         public void ClickJoiningMaccabiForm() =>
             _driver.FindElement(HomePageLocators.JoiningMaccabiFormCard).Click();
@@ -151,8 +93,11 @@ namespace PregnancyApp.Tests.Pages
         public void ClickAvatarButton() =>
             _driver.FindElement(HomePageLocators.AvatarButton).Click();
 
-        public void ClickProfilePictureImageUpload() =>
+        public void ClickProfilePictureImageUpload()
+        {
+            System.Threading.Thread.Sleep(1000);
             _driver.FindElement(HomePageLocators.ProfilePictureImageUploadButton).Click();
+        }
 
         public void ClickProfilePictureSelectingGallery() =>
             _driver.FindElement(HomePageLocators.ProfilePictureSelectingGalleryItem).Click();
@@ -289,7 +234,18 @@ namespace PregnancyApp.Tests.Pages
             try
             {
                 _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
-                var firstImage = By.XPath("//androidx.compose.ui.platform.ComposeView/android.view.View/android.view.View/android.view.View[6]/android.view.View[2]/android.view.View[2]/android.view.View");
+
+                // Try gallery image first (for profile pictures)
+                var galleryImage = By.XPath("//androidx.compose.ui.platform.ComposeView/android.view.View/android.view.View/android.view.View[6]/android.view.View[2]/android.view.View[2]/android.view.View");
+                var galleryElements = _driver.FindElements(galleryImage);
+                if (galleryElements.Count > 0)
+                {
+                    galleryElements[0].Click();
+                    return;
+                }
+
+                // Otherwise try file browser
+                var firstImage = By.XPath("(//android.widget.ImageView[@resource-id=\"com.google.android.documentsui:id/icon_thumb\"])[1]");
                 var elements = _driver.FindElements(firstImage);
                 if (elements.Count > 0)
                 {
@@ -459,9 +415,19 @@ namespace PregnancyApp.Tests.Pages
             TryPressBack();
         }
 
-        public void NavigateToPersonalMedicalFile()
+        public void GoBack(int times)
         {
-            _driver.FindElement(HomePageLocators.PersonalMedicalFileButton).Click();
+            for (int i = 0; i < times; i++)
+            {
+                TryPressBack();
+            }
+        }
+
+        public void NavigateToLoginPage()
+        {
+            HomePage homePage = new HomePage(_driver);
+            homePage.ClickPersonalArea();
+            homePage.ClickYourFileButton();
         }
     }
 }

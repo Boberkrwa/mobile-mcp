@@ -12,5 +12,7 @@ namespace PregnancyApp.Helpers
         public static readonly By DeleteItemCheckbox = By.Id("com.ideomobile.maccabipregnancy:id/cbMyLists");
 
         public static readonly By ConfirmDeleteButton = By.Id("com.ideomobile.maccabipregnancy:id/addItemPanel");
+
+        public static readonly By MyListTitle = By.Id("com.ideomobile.maccabipregnancy:id/tvMyList");
     }
 }

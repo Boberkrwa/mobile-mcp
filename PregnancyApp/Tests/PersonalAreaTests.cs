@@ -68,7 +68,7 @@ namespace PregnancyApp.Tests
             homePage.ConfirmFileDeletion();
         }
 
-        [Test(Description = "Test Case: 120192"), Order(6)]
+        [Test(Description = "Test Case: 120192, 116107"), Order(6)]
         public void ChangePersonalDetails()
         {
             var homePage = new HomePage(_driver!);

@@ -6,17 +6,16 @@ namespace PregnancyApp.Helpers
     public static class HomePageLocators
     {
         public static readonly By PersonalAreaButton = By.Id("com.ideomobile.maccabipregnancy:id/topPanel");
-        public static readonly By PersonalMedicalFileButton = MobileBy.AndroidUIAutomator("new UiSelector().descriptionContains(\"התיק הרפואי\").descriptionContains(\"שלך\")");
         public static readonly By IdInput = By.Id("com.ideomobile.maccabipregnancy:id/textInputEditText");
         public static readonly By PasswordInput = By.Id("com.ideomobile.maccabipregnancy:id/textInputEditTextPassword");
         public static readonly By LoginButton = By.Id("com.ideomobile.maccabipregnancy:id/enterButton");
         public static readonly By YourBagButton = By.XPath("(//android.widget.ImageView[@resource-id=\"com.ideomobile.maccabipregnancy:id/ivCubeImage\"])[1]");
-        public static readonly By YOurBagFirstIndex = By.XPath("//androidx.recyclerview.widget.RecyclerView[@resource-id=\"com.ideomobile.maccabipregnancy:id/rvMyListTab\"]/android.widget.LinearLayout[1]");
+        public static readonly By YourBagFirstIndex = By.XPath("//androidx.recyclerview.widget.RecyclerView[@resource-id=\"com.ideomobile.maccabipregnancy:id/rvMyListTab\"]/android.widget.LinearLayout[1]");
         public static readonly By YourList = By.Id("com.ideomobile.maccabipregnancy:id/btnMyList");
         public static readonly By WeekInfoButton = By.Id("com.ideomobile.maccabipregnancy:id/weekInfoButton");
         public static readonly By WeekRightArrow = By.Id("com.ideomobile.maccabipregnancy:id/rightArrow");
         public static readonly By WeekLeftArrow = By.Id("com.ideomobile.maccabipregnancy:id/leftArrow");
-        public static readonly By EligibilitySectionRoot = By.Id("com.ideomobile.maccabipregnancy:id/iEligibilitySectionRoot");
+        public static readonly By YourRights = By.XPath("(//android.widget.ImageView[@resource-id=\"com.ideomobile.maccabipregnancy:id/arrow\"])[1]");
         public static readonly By JoiningMaccabiFormCard = By.XPath("//android.widget.FrameLayout[@resource-id=\"com.ideomobile.maccabipregnancy:id/cvLead\"]/android.view.ViewGroup");
         public static readonly By FetusMovementButton = By.XPath("//android.widget.LinearLayout[@content-desc=\"לחצן מעקב תנועות עובר\"]/android.widget.FrameLayout/android.widget.ImageView[1]");
         public static readonly By StartFetusMovement = By.XPath("//android.widget.FrameLayout[@content-desc=\"לחצן התחילי מעקב\"]/android.widget.FrameLayout/android.widget.ImageView");
@@ -25,10 +24,6 @@ namespace PregnancyApp.Helpers
         public static readonly By ContractionIcon = By.XPath("//android.widget.FrameLayout[@resource-id=\"com.ideomobile.maccabipregnancy:id/flContractionIcon\"]/android.widget.ImageView[1]");
         public static readonly By AnyImageView = By.XPath("//android.widget.ImageView");
         public static readonly By ResetContractionsButton = By.Id("com.ideomobile.maccabipregnancy:id/tvReset");
-        public static readonly By PreviousContractionTracking = By.XPath("//*[contains(@resource-id,'prev') or contains(@resource-id,'last') or contains(@text,'Previous') or contains(@text,'previous') or contains(@text,'קודם') or contains(@text,'אחרון') or contains(@content-desc,'Previous') or contains(@content-desc,'previous') or contains(@content-desc,'קודם') or contains(@content-desc,'אחרון')]");
-        public static readonly By ContractionResultsItemRoot = By.Id("com.ideomobile.maccabipregnancy:id/llContractionTrackingItemRoot");
-        public static readonly By IntervalTimerHeader = By.Id("com.ideomobile.maccabipregnancy:id/tvIntervalTimerHeader");
-        public static readonly By TimeOfMeasure = By.Id("com.ideomobile.maccabipregnancy:id/tvTimeOfMeasureClick");
         public static readonly By PregnancyBinderButton = By.XPath("//android.widget.LinearLayout[@content-desc=\"לחצן קלסר ההריון שלך\"]/android.widget.FrameLayout/android.widget.ImageView[1]");
         public static readonly By FloatingActionButton = By.Id("com.ideomobile.maccabipregnancy:id/floatingActionButton");
         public static readonly By MyFilesOption = By.XPath("//android.widget.TextView[@resource-id=\"com.ideomobile.maccabipregnancy:id/categoryNameTextView\" and @text=\"הקבצים שלי\"]");
@@ -66,5 +61,6 @@ namespace PregnancyApp.Helpers
         public static readonly By PermissionAllowButton = By.Id("com.android.permissioncontroller:id/permission_allow_button");
         public static readonly By SystemPositiveButton = By.Id("android:id/button1");
         public static readonly By DocumentsUiDone = By.Id("com.android.documentsui:id/action_menu_done");
+        public static readonly By YourFileButton = By.XPath("//android.widget.LinearLayout[@content-desc=\"לחצן התיק הרפואי שלך\"]/android.widget.FrameLayout/android.widget.ImageView[1]");
     }
 }

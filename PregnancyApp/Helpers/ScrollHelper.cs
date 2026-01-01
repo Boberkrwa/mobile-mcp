@@ -9,7 +9,7 @@ namespace PregnancyApp.Helpers
 {
     public static class ScrollHelper
     {
-        public static void ScrollToBottom(AndroidDriver driver, int attempts = 5)
+        public static void ScrollAction(AndroidDriver driver, int attempts = 5)
         {
             try
             {

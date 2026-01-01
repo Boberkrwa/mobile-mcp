@@ -14,17 +14,30 @@ namespace PregnancyApp.Tests.Pages
             _driver = driver;
         }
 
-        public void TapLabTests()
+        public void ClickBloodTests()
         {
             var element = new WebDriverWait(_driver, TimeSpan.FromSeconds(10))
                 .Until(drv => drv.FindElement(MedicalFileLocators.LabResults));
             element.Click();
-            System.Threading.Thread.Sleep(1000);
         }
 
-        public void SelectLabTest()
+        public void CheckIfUrineTestButtonIsVisible()
         {
-            System.Threading.Thread.Sleep(2000);
+            try
+            {
+                var element = _driver.FindElement(MedicalFileLocators.UrineTestButton);
+                if (element.Displayed)
+                {
+                    throw new Exception("Urine Test button should not be visible but it is");
+                }
+            }
+            catch (NoSuchElementException)
+            {
+                // Expected - button should not be found
+            }
+        }
+        public void SelectBloodTest()
+        {
             var elements = _driver.FindElements(MedicalFileLocators.FirstLabResult);
 
             if (elements.Count > 0)
@@ -39,8 +52,8 @@ namespace PregnancyApp.Tests.Pages
 
         public void NavigateToLabTest()
         {
-            TapLabTests();
-            SelectLabTest();
+            ClickBloodTests();
+            SelectBloodTest();
         }
 
         public bool IsUniqueLabTestVisible()
@@ -52,6 +65,34 @@ namespace PregnancyApp.Tests.Pages
             catch (NoSuchElementException)
             {
                 return false;
+            }
+        }
+
+        public void ClickUltraSoundTestsTab()
+        {
+            var element = new WebDriverWait(_driver, TimeSpan.FromSeconds(10))
+                .Until(drv => drv.FindElement(MedicalFileLocators.UltraSoundTests));
+            element.Click();
+        }
+
+        public bool IsBiochemichalContainerEmpty()
+        {
+            try
+            {
+                var container = _driver.FindElement(By.Id("com.ideomobile.maccabipregnancy:id/flRecyclerContainer"));
+                // Check for RecyclerView inside the container
+                var recyclerView = container.FindElements(By.XPath(".//androidx.recyclerview.widget.RecyclerView"));
+                if (recyclerView.Count == 0)
+                {
+                    return true;
+                }
+                // If RecyclerView exists, check if it has child items
+                var items = recyclerView[0].FindElements(By.XPath("./*"));
+                return items.Count == 0;
+            }
+            catch
+            {
+                return true;
             }
         }
 

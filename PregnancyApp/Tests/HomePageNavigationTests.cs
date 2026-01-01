@@ -41,7 +41,7 @@ namespace PregnancyApp.Tests
             homePage.ScrollWeekForward();
             homePage.ScrollWeekBackwards();
             var beforeScroll = _driver!.PageSource;
-            ScrollHelper.ScrollToBottom(_driver!, 1);
+            ScrollHelper.ScrollAction(_driver!, 1);
             var afterScroll = _driver!.PageSource;
             ClassicAssert.AreNotEqual(beforeScroll, afterScroll, "Scroll did not change the view");
         }
@@ -51,17 +51,19 @@ namespace PregnancyApp.Tests
         {
             var homePage = new HomePage(_driver!);
             homePage.ClickFirstArticle();
-            ScrollHelper.ScrollToBottom(_driver!, 2);
+            ScrollHelper.ScrollAction(_driver!, 2);
             homePage.GoBack();
-            ScrollHelper.ScrollToBottom(_driver!, 3);
+            ScrollHelper.ScrollAction(_driver!, 3);
             homePage.ClickThirdArticle();
-            ScrollHelper.ScrollToBottom(_driver!, 1);
+            ScrollHelper.ScrollAction(_driver!, 1);
         }
 
         [Test, Order(8)]
         public void EnteringJoiningMaccabiForm()
         {
             var homePage = new HomePage(_driver!);
+            Thread.Sleep(1000);
+            ScrollHelper.ScrollAction(_driver!, 2);
             homePage.ClickYourRights();
             homePage.ClickJoiningMaccabiForm();
             var pageSource = _driver!.PageSource;
@@ -73,7 +75,7 @@ namespace PregnancyApp.Tests
         {
             var homePage = new HomePage(_driver!);
             homePage.ClickChecksFirstIndex();
-            ScrollHelper.ScrollToBottom(_driver!, 1);
+            ScrollHelper.ScrollAction(_driver!, 1);
             homePage.GoBack();
             homePage.ClickShowMoreChecks();
             homePage.ClickChecksFullList();
