@@ -7,16 +7,10 @@ namespace PregnancyApp.Tests.Pages
     {
         private readonly AndroidDriver _driver;
 
-        #region Constructor
-
         public LoginPage(AndroidDriver driver)
         {
             _driver = driver;
         }
-
-        #endregion
-
-        #region Input Actions
 
         public void EnterId(string text) =>
             _driver.FindElement(LoginPageLocators.IdInput).SendKeys(text);
@@ -24,27 +18,17 @@ namespace PregnancyApp.Tests.Pages
         public void EnterPassword(string text) =>
             _driver.FindElement(LoginPageLocators.PasswordInput).SendKeys(text);
 
-        public void TapLoginButton() =>
+        public void ClickLoginButton() =>
             _driver.FindElement(LoginPageLocators.LoginButton).Click();
-
-        #endregion
-
-        #region Login Operations
 
         public void Login(string userId, string password)
         {
             EnterId(userId);
             EnterPassword(password);
-            TapLoginButton();
+            ClickLoginButton();
         }
-
-        #endregion
-
-        #region Error Handling
 
         public void CloseErrorPopup() =>
             _driver.FindElement(LoginPageLocators.ErrorPopupConfirmButton).Click();
-
-        #endregion
     }
 }

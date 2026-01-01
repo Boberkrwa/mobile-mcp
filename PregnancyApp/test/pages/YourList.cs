@@ -10,37 +10,27 @@ namespace PregnancyApp.Tests.Pages
     {
         private readonly AndroidDriver _driver;
 
-        #region Constructor
-
         public YourList(AndroidDriver driver)
         {
             _driver = driver;
         }
 
-        #endregion
-
-        #region Navigation
-
-        public void TapYourList() =>
+        public void ClickYourList() =>
             _driver.FindElement(HomePageLocators.YourList).Click();
 
         public void MarkFirstIndexIfNeededAndNavigate(HomePage homePage)
         {
             if (!homePage.IsPageAlreadyHasCount(1))
             {
-                homePage.TapYourBagFirstIndex();
+                homePage.ClickYourBagFirstIndex();
             }
-            TapYourList();
+            ClickYourList();
         }
 
-        #endregion
-
-        #region Item Management
-
-        public void TapOptionsButton() =>
+        public void ClickOptionsButton() =>
             _driver.FindElement(YourListLocators.YourListOptionsButton).Click();
 
-        public void TapDeleteButton() =>
+        public void ClickDeleteButton() =>
             _driver.FindElement(YourListLocators.YourListDeleteButton).Click();
 
         public void CheckDeleteItemCheckbox() =>
@@ -51,15 +41,11 @@ namespace PregnancyApp.Tests.Pages
 
         public void DeleteItem()
         {
-            TapOptionsButton();
-            TapDeleteButton();
+            ClickOptionsButton();
+            ClickDeleteButton();
             CheckDeleteItemCheckbox();
             ConfirmDelete();
         }
-
-        #endregion
-
-        #region Validations
 
         public bool IsTitleShowingCount(int expected = 1)
         {
@@ -86,7 +72,5 @@ namespace PregnancyApp.Tests.Pages
                 return false;
             }
         }
-
-        #endregion
     }
 }

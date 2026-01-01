@@ -9,16 +9,10 @@ namespace PregnancyApp.Tests.Pages
     {
         private readonly AndroidDriver _driver;
 
-        #region Constructor
-
         public MedicalFile(AndroidDriver driver)
         {
             _driver = driver;
         }
-
-        #endregion
-
-        #region Lab Test Actions
 
         public void TapLabTests()
         {
@@ -49,10 +43,6 @@ namespace PregnancyApp.Tests.Pages
             SelectLabTest();
         }
 
-        #endregion
-
-        #region Validations
-
         public bool IsUniqueLabTestVisible()
         {
             try
@@ -65,6 +55,5 @@ namespace PregnancyApp.Tests.Pages
             }
         }
 
-        #endregion
     }
 }
