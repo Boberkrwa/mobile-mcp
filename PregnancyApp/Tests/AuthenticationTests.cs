@@ -33,7 +33,7 @@ namespace PregnancyApp.Tests
             }
         }
 
-        [Test(Description = "Test Case: 118836, 118864, 120191"), Order(1)]
+        [Test(Description = "Test Case: 118836, 118864, 120191"), Order(2)]
         public void EnteringLabTest()
         {
             var homePage = new HomePage(_driver!);
@@ -46,7 +46,7 @@ namespace PregnancyApp.Tests
 
         }
 
-        [Test(Description = "Test Case: 118845"), Order(12)]
+        [Test(Description = "Test Case: 118845"), Order(3)]
         public void IsUrineTestHiddenForNonPilotUser()
         {
             var homePage = new HomePage(_driver!);
@@ -59,7 +59,7 @@ namespace PregnancyApp.Tests
         }
 
 
-        [Test(Description = "Test Case: 116107"), Order(12)]
+        [Test(Description = "Test Case: 116107"), Order(4)]
         public void NoResultsScreens()
         {
             var homePage = new HomePage(_driver!);
@@ -71,7 +71,7 @@ namespace PregnancyApp.Tests
             Assert.That(medicalFile.IsBiochemichalContainerEmpty(), Is.True, "RecyclerContainer is empty");
 
         }
-        [Test, Order(2)]
+        [Test, Order(1)]
         public void FailedLogin()
         {
             var homePage = new HomePage(_driver!);
